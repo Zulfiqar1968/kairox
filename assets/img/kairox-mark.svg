@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+<title>Kairox brand mark</title><desc>Premium geometric K mark for Kairox AI.</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B3D3F"/><stop offset="1" stop-color="#0F6B63"/></linearGradient><filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#02191B" flood-opacity=".28"/></filter></defs>
+<rect width="180" height="180" rx="42" fill="#F7F2E8"/><path d="M42 31h43c8 0 14 6 14 14v90c0 8-6 14-14 14H42V31Z" fill="url(#g)" filter="url(#s)"/><path d="M104 31h16c29 0 52 23 52 52v2h-22c-25 0-46-20-46-46v-8Z" fill="#0F6B63"/><path d="M104 92h22c25 0 46 20 46 46v11h-68V92Z" fill="#06343A" opacity=".96"/><circle cx="136" cy="29" r="8" fill="#C9A44A"/></svg>
