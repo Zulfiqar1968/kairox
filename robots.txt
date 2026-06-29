@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kairox.ai/sitemap.xml
