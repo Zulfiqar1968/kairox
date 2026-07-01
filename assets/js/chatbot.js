@@ -1,2 +1,154 @@
+(function () {
+  const config = window.KairoxChatConfig || {};
+  const webhookUrl = config.webhook;
 
-(function(){'use strict';const WEBHOOK_URL='http://localhost:5678/webhook/ebb8e3d9-24dd-4ab2-b79d-45f4c7851c27/chat';const STORAGE_KEY='kairox_chat_session_id';const HISTORY_KEY='kairox_chat_history';const sessionId=localStorage.getItem(STORAGE_KEY)||(crypto.randomUUID?crypto.randomUUID():'kx-'+Math.random().toString(36).slice(2)+Date.now());localStorage.setItem(STORAGE_KEY,sessionId);const shell=document.createElement('div');shell.innerHTML=`<button class="kx-chat-button" aria-label="Open Kairox AI assistant" data-track="chat_open"><i class="bi bi-stars"></i></button><section class="kx-chat-window" aria-label="Kairox AI assistant" role="dialog" aria-modal="false"><div class="kx-chat-header"><div class="kx-chat-avatar"><i class="bi bi-robot"></i></div><div><strong>Kairox AI Advisor</strong><div style="font-size:.78rem;opacity:.78">Ask about AI employees, pricing or ROI</div></div><button class="kx-chat-close" aria-label="Close chat"><i class="bi bi-x-lg"></i></button></div><div class="kx-chat-messages" aria-live="polite"></div><form class="kx-chat-input"><input type="text" placeholder="Ask how AI can help your business..." aria-label="Chat message" autocomplete="off" required /><button type="submit" aria-label="Send message"><i class="bi bi-send-fill"></i></button></form></section>`;document.body.appendChild(shell);const button=shell.querySelector('.kx-chat-button'),windowEl=shell.querySelector('.kx-chat-window'),closeBtn=shell.querySelector('.kx-chat-close'),messagesEl=shell.querySelector('.kx-chat-messages'),form=shell.querySelector('form'),input=shell.querySelector('input');let history=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(!history.length)history.push({role:'bot',text:'Hello, I’m the Kairox AI Advisor. Tell me what type of business you run and I’ll suggest practical automations that can reduce workload and protect missed revenue.'});function save(){localStorage.setItem(HISTORY_KEY,JSON.stringify(history.slice(-40)))}function addMessage(role,text,persist=true){const msg=document.createElement('div');msg.className='kx-msg '+(role==='user'?'user':'bot');msg.textContent=text;messagesEl.appendChild(msg);messagesEl.scrollTop=messagesEl.scrollHeight;if(persist){history.push({role,text});save()}}function render(){messagesEl.innerHTML='';history.forEach(m=>addMessage(m.role,m.text,false));messagesEl.scrollTop=messagesEl.scrollHeight}function typing(){const t=document.createElement('div');t.className='kx-msg bot typing';t.innerHTML='<span></span><span></span><span></span>';messagesEl.appendChild(t);messagesEl.scrollTop=messagesEl.scrollHeight;return t}async function send(message){addMessage('user',message);const t=typing();try{const response=await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,session_id:sessionId,source:'website'})});if(!response.ok)throw new Error('Webhook error '+response.status);const data=await response.json();t.remove();addMessage('bot',data.reply||'Thanks. A Kairox consultant can review your workflow and recommend the best next step.');if(data.lead_status){window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'chat_lead_status',lead_status:data.lead_status})}}catch(err){console.error(err);t.remove();addMessage('bot','I could not reach the AI assistant right now. Please try again, or use the consultation form and WhatsApp button to contact Kairox.')}}button.addEventListener('click',()=>{windowEl.classList.add('open');button.style.display='none';render();setTimeout(()=>input.focus(),80)});closeBtn.addEventListener('click',()=>{windowEl.classList.remove('open');button.style.display='flex'});form.addEventListener('submit',e=>{e.preventDefault();const text=input.value.trim();if(!text)return;input.value='';send(text)});render()})();
+  // -----------------------------
+  // CREATE UI
+  // -----------------------------
+  const btn = document.createElement("div");
+  btn.innerHTML = "💬";
+  btn.style = `
+    position:fixed;bottom:20px;right:20px;
+    width:60px;height:60px;background:#075e54;
+    color:white;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;cursor:pointer;z-index:999999;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  `;
+
+  const panel = document.createElement("div");
+  panel.style = `
+    position:fixed;bottom:90px;right:20px;
+    width:380px;height:520px;background:#efeae2;
+    border-radius:12px;display:none;flex-direction:column;
+    overflow:hidden;z-index:999999;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+  `;
+
+  // -----------------------------
+  // HEADER
+  // -----------------------------
+  const header = document.createElement("div");
+  header.style = "background:#075e54;color:#fff;padding:10px;display:flex;justify-content:space-between;align-items:center;";
+
+  header.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;font-weight:bold;">
+      <div style="width:28px;height:28px;background:#fff;border-radius:50%;"></div>
+      ${config.brand || "AI Assistant"}
+    </div>
+    <div style="cursor:pointer;">✖</div>
+  `;
+
+  // -----------------------------
+  // CHAT BOX
+  // -----------------------------
+  const messages = document.createElement("div");
+  messages.style = "flex:1;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;";
+
+  // -----------------------------
+  // INPUT
+  // -----------------------------
+  const inputBox = document.createElement("div");
+  inputBox.style = "display:flex;padding:8px;background:#f0f0f0;gap:8px;";
+
+  const input = document.createElement("input");
+  input.placeholder = "Type your message...";
+  input.style = "flex:1;padding:10px;border-radius:20px;border:none;outline:none;";
+
+  const sendBtn = document.createElement("button");
+  sendBtn.innerHTML = "➤";
+  sendBtn.style = "width:40px;height:40px;border-radius:50%;background:#075e54;color:#fff;border:none;cursor:pointer;";
+
+  inputBox.appendChild(input);
+  inputBox.appendChild(sendBtn);
+
+  panel.appendChild(header);
+  panel.appendChild(messages);
+  panel.appendChild(inputBox);
+
+  document.body.appendChild(btn);
+  document.body.appendChild(panel);
+
+  // -----------------------------
+  // SESSION ID (IMPORTANT)
+  // -----------------------------
+  let sessionId = localStorage.getItem("kx_session");
+
+  if (!sessionId) {
+    sessionId = "kx_" + Math.random().toString(36).substring(2, 10);
+    localStorage.setItem("kx_session", sessionId);
+  }
+
+  // -----------------------------
+  // TOGGLE
+  // -----------------------------
+  btn.onclick = () => {
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+  };
+
+  header.lastElementChild.onclick = () => {
+    panel.style.display = "none";
+  };
+
+  // -----------------------------
+  // UI HELPERS
+  // -----------------------------
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.style.maxWidth = "75%";
+    div.style.padding = "8px 10px";
+    div.style.borderRadius = "8px";
+    div.style.fontSize = "14px";
+    div.style.wordWrap = "break-word";
+
+    if (type === "user") {
+      div.style.alignSelf = "flex-end";
+      div.style.background = "#dcf8c6";
+    } else {
+      div.style.alignSelf = "flex-start";
+      div.style.background = "#fff";
+    }
+
+    div.innerHTML = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // -----------------------------
+  // SEND MESSAGE (UPGRADED)
+  // -----------------------------
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    try {
+      const res = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text,
+          sessionId: sessionId,
+          page: window.location.href
+        })
+      });
+
+      const data = await res.json();
+      const reply = data.output || data.message || "No response";
+
+      addMessage(reply, "bot");
+
+    } catch (err) {
+      addMessage("Connection error", "bot");
+    }
+  }
+
+  sendBtn.onclick = sendMessage;
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+})();
