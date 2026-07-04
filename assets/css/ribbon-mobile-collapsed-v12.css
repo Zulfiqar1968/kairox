@@ -1,0 +1,174 @@
+/* =========================================================
+   KAIROX MOBILE COLLAPSED RIBBON POSITION V12
+   Mobile only:
+   - Moves the ribbon body completely to the right in collapsed state
+   - Shows only the gold expand/collapse tab
+   - Keeps the tab flush-attached to the ribbon body when expanded
+   - Prevents scroll from visually forcing the ribbon open on mobile
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-tab-width: 34px;
+    --kx-ribbon-tab-height: 66px;
+    --kx-ribbon-body-width: 74px;
+    --kx-ribbon-body-height: 142px;
+  }
+
+  .kx-floating-actions {
+    position: fixed !important;
+    top: 50% !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: var(--kx-ribbon-body-width) !important;
+    max-width: var(--kx-ribbon-body-width) !important;
+    height: var(--kx-ribbon-body-height) !important;
+    max-height: var(--kx-ribbon-body-height) !important;
+    overflow: visible !important;
+    transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+    transition: transform .42s cubic-bezier(.22, 1, .36, 1) !important;
+  }
+
+  /* Expanded: ribbon body appears inside screen, tab remains attached on the left */
+  .kx-floating-actions.is-visible,
+  .kx-floating-actions.is-visible:focus-within {
+    transform: translate(0, -50%) !important;
+  }
+
+  /* Collapsed: body is fully off-screen; only the gold tab is visible */
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions.is-collapsed:focus-within,
+  .kx-floating-actions:not(.is-visible):focus-within {
+    transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+  }
+
+  .kx-ribbon-toggle {
+    position: absolute !important;
+    top: 50% !important;
+    left: calc(var(--kx-ribbon-tab-width) * -1) !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+    width: var(--kx-ribbon-tab-width) !important;
+    min-width: var(--kx-ribbon-tab-width) !important;
+    max-width: var(--kx-ribbon-tab-width) !important;
+    height: var(--kx-ribbon-tab-height) !important;
+    min-height: var(--kx-ribbon-tab-height) !important;
+    max-height: var(--kx-ribbon-tab-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 1000000 !important;
+  }
+
+  .kx-ribbon-toggle-inner {
+    width: var(--kx-ribbon-tab-width) !important;
+    min-width: var(--kx-ribbon-tab-width) !important;
+    max-width: var(--kx-ribbon-tab-width) !important;
+    height: var(--kx-ribbon-tab-height) !important;
+    min-height: var(--kx-ribbon-tab-height) !important;
+    max-height: var(--kx-ribbon-tab-height) !important;
+    transform: none !important;
+    border-radius: 999px 0 0 999px !important;
+  }
+
+  .kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+  .kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner,
+  .kx-ribbon-toggle:active .kx-ribbon-toggle-inner {
+    transform: none !important;
+  }
+
+  .kx-action-ribbon {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    width: var(--kx-ribbon-body-width) !important;
+    max-width: var(--kx-ribbon-body-width) !important;
+    height: var(--kx-ribbon-body-height) !important;
+    max-height: var(--kx-ribbon-body-height) !important;
+  }
+
+  .kx-floating-actions.is-collapsed .kx-action-ribbon {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .kx-floating-actions.is-visible .kx-action-ribbon {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-tab-width: 32px;
+    --kx-ribbon-tab-height: 64px;
+    --kx-ribbon-body-width: 70px;
+    --kx-ribbon-body-height: 140px;
+  }
+
+  .kx-ribbon-toggle {
+    left: calc(var(--kx-ribbon-tab-width) * -1) !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON MOBILE INLINE SUPPORT V13
+   The JS now applies the final mobile position inline with !important.
+   This CSS supports that model and keeps desktop unchanged.
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-tab-width: 34px;
+    --kx-ribbon-tab-height: 66px;
+    --kx-ribbon-body-width: 74px;
+    --kx-ribbon-body-height: 142px;
+  }
+
+  .kx-floating-actions {
+    right: 0 !important;
+    left: auto !important;
+    width: var(--kx-ribbon-body-width) !important;
+    max-width: var(--kx-ribbon-body-width) !important;
+    height: var(--kx-ribbon-body-height) !important;
+    max-height: var(--kx-ribbon-body-height) !important;
+  }
+
+  .kx-floating-actions.is-collapsed .kx-action-ribbon {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .kx-floating-actions.is-visible .kx-action-ribbon {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .kx-ribbon-toggle {
+    z-index: 1000000 !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .kx-ribbon-toggle-inner,
+  .kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+  .kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner,
+  .kx-ribbon-toggle:active .kx-ribbon-toggle-inner {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-tab-width: 32px;
+    --kx-ribbon-tab-height: 64px;
+    --kx-ribbon-body-width: 70px;
+    --kx-ribbon-body-height: 140px;
+  }
+}

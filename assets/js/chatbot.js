@@ -11,9 +11,9 @@
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v8";
+  const historyKey = "kx_chat_history_v13";
   const versionKey = "kx_chat_widget_version";
-  const widgetVersion = "kairox-ribbon-final-alignment-v8";
+  const widgetVersion = "kairox-ribbon-mobile-inline-v13";
 
   let sessionId = localStorage.getItem(sessionKey);
   if (!sessionId) {
@@ -32,6 +32,10 @@
     lastChatAt: 0,
     history: safeParse(localStorage.getItem(historyKey), [])
   };
+
+  function isMobileRibbonViewport() {
+    return window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches;
+  }
 
   function safeParse(value, fallback) {
     try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
@@ -187,6 +191,112 @@
     const input = panel.querySelector(".kx-chat-input-field");
     const typingNote = panel.querySelector(".kx-chat-typing-note");
 
+
+    function forceMobileRibbonPosition() {
+      if (!actions || !ribbonToggle) return;
+
+      const isMobile = isMobileRibbonViewport();
+      const actionRibbon = actions.querySelector(".kx-action-ribbon");
+
+      if (!isMobile) {
+        actions.style.removeProperty("width");
+        actions.style.removeProperty("height");
+        actions.style.removeProperty("max-width");
+        actions.style.removeProperty("max-height");
+        actions.style.removeProperty("transform");
+        actions.style.removeProperty("right");
+        actions.style.removeProperty("top");
+
+        ribbonToggle.style.removeProperty("position");
+        ribbonToggle.style.removeProperty("left");
+        ribbonToggle.style.removeProperty("top");
+        ribbonToggle.style.removeProperty("transform");
+        ribbonToggle.style.removeProperty("width");
+        ribbonToggle.style.removeProperty("height");
+        ribbonToggle.style.removeProperty("z-index");
+
+        if (actionRibbon) {
+          actionRibbon.style.removeProperty("opacity");
+          actionRibbon.style.removeProperty("visibility");
+          actionRibbon.style.removeProperty("pointer-events");
+          actionRibbon.style.removeProperty("width");
+          actionRibbon.style.removeProperty("height");
+          actionRibbon.style.removeProperty("right");
+          actionRibbon.style.removeProperty("top");
+        }
+        return;
+      }
+
+      const narrow = window.matchMedia("(max-width: 430px)").matches;
+      const bodyWidth = narrow ? 70 : 74;
+      const bodyHeight = narrow ? 140 : 142;
+      const tabWidth = narrow ? 32 : 34;
+      const tabHeight = narrow ? 64 : 66;
+
+      actions.style.setProperty("position", "fixed", "important");
+      actions.style.setProperty("top", "50%", "important");
+      actions.style.setProperty("right", "0", "important");
+      actions.style.setProperty("left", "auto", "important");
+      actions.style.setProperty("bottom", "auto", "important");
+      actions.style.setProperty("width", bodyWidth + "px", "important");
+      actions.style.setProperty("max-width", bodyWidth + "px", "important");
+      actions.style.setProperty("height", bodyHeight + "px", "important");
+      actions.style.setProperty("max-height", bodyHeight + "px", "important");
+      actions.style.setProperty("overflow", "visible", "important");
+      actions.style.setProperty(
+        "transform",
+        state.isRibbonVisible ? "translate(0, -50%)" : "translate(" + bodyWidth + "px, -50%)",
+        "important"
+      );
+
+      ribbonToggle.style.setProperty("position", "absolute", "important");
+      ribbonToggle.style.setProperty("top", "50%", "important");
+      ribbonToggle.style.setProperty("left", (-tabWidth + 1) + "px", "important");
+      ribbonToggle.style.setProperty("right", "auto", "important");
+      ribbonToggle.style.setProperty("bottom", "auto", "important");
+      ribbonToggle.style.setProperty("transform", "translateY(-50%)", "important");
+      ribbonToggle.style.setProperty("width", tabWidth + "px", "important");
+      ribbonToggle.style.setProperty("min-width", tabWidth + "px", "important");
+      ribbonToggle.style.setProperty("max-width", tabWidth + "px", "important");
+      ribbonToggle.style.setProperty("height", tabHeight + "px", "important");
+      ribbonToggle.style.setProperty("min-height", tabHeight + "px", "important");
+      ribbonToggle.style.setProperty("max-height", tabHeight + "px", "important");
+      ribbonToggle.style.setProperty("z-index", "1000000", "important");
+
+      const toggleInner = ribbonToggle.querySelector(".kx-ribbon-toggle-inner");
+      if (toggleInner) {
+        toggleInner.style.setProperty("width", tabWidth + "px", "important");
+        toggleInner.style.setProperty("height", tabHeight + "px", "important");
+        toggleInner.style.setProperty("min-width", tabWidth + "px", "important");
+        toggleInner.style.setProperty("min-height", tabHeight + "px", "important");
+        toggleInner.style.setProperty("max-width", tabWidth + "px", "important");
+        toggleInner.style.setProperty("max-height", tabHeight + "px", "important");
+        toggleInner.style.setProperty("transform", "none", "important");
+      }
+
+      if (actionRibbon) {
+        actionRibbon.style.setProperty("position", "absolute", "important");
+        actionRibbon.style.setProperty("top", "0", "important");
+        actionRibbon.style.setProperty("right", "0", "important");
+        actionRibbon.style.setProperty("left", "auto", "important");
+        actionRibbon.style.setProperty("width", bodyWidth + "px", "important");
+        actionRibbon.style.setProperty("max-width", bodyWidth + "px", "important");
+        actionRibbon.style.setProperty("height", bodyHeight + "px", "important");
+        actionRibbon.style.setProperty("min-height", bodyHeight + "px", "important");
+        actionRibbon.style.setProperty("max-height", bodyHeight + "px", "important");
+
+        if (state.isRibbonVisible) {
+          actionRibbon.style.setProperty("opacity", "1", "important");
+          actionRibbon.style.setProperty("visibility", "visible", "important");
+          actionRibbon.style.setProperty("pointer-events", "auto", "important");
+        } else {
+          actionRibbon.style.setProperty("opacity", "0", "important");
+          actionRibbon.style.setProperty("visibility", "hidden", "important");
+          actionRibbon.style.setProperty("pointer-events", "none", "important");
+        }
+      }
+    }
+
     function syncRibbon() {
       actions.classList.toggle("is-visible", state.isRibbonVisible);
       actions.classList.toggle("is-collapsed", !state.isRibbonVisible);
@@ -194,6 +304,7 @@
       ribbonToggle.setAttribute("aria-expanded", String(state.isRibbonVisible));
       ribbonToggle.setAttribute("aria-label", state.isRibbonVisible ? "Collapse quick actions" : "Expand quick actions");
       ribbonToggle.setAttribute("title", state.isRibbonVisible ? "Collapse" : "Expand");
+      forceMobileRibbonPosition();
     }
 
     function revealRibbon(source) {
@@ -230,7 +341,11 @@
 
     let scrollTicking = false;
     function handleScrollActivity() {
-      if (state.manualMode) return;
+      
+      
+      if (isMobileRibbonViewport()) return;
+if (isMobileRibbonViewport()) return;
+if (state.manualMode) return;
       if (!scrollTicking) {
         window.requestAnimationFrame(() => {
           revealRibbon("auto");
@@ -243,6 +358,10 @@
     window.addEventListener("scroll", handleScrollActivity, { passive: true });
     window.addEventListener("wheel", handleScrollActivity, { passive: true });
     window.addEventListener("touchmove", handleScrollActivity, { passive: true });
+    window.addEventListener("resize", forceMobileRibbonPosition, { passive: true });
+    window.addEventListener("orientationchange", function () {
+      setTimeout(forceMobileRibbonPosition, 250);
+    });
 
     function openPanel() {
       state.isOpen = true;
