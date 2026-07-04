@@ -1,10 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Floating n8n Chat</title>
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kairox Chat Test Page | Noindex</title>
 <style>
   body {
     margin: 0;
@@ -148,33 +148,25 @@
     }
   }
 </style>
-</head>
-
+<meta content="noindex, nofollow" name="robots"/><meta content="Internal Kairox chat testing page. Not intended for search indexing." name="description"/></head>
 <body>
-
 <!-- FLOAT BUTTON -->
 <div class="chat-btn" onclick="toggleChat()">💬</div>
-
 <!-- CHAT PANEL -->
 <div class="chat-panel" id="chatPanel">
-
-  <div class="header">
-    <div class="header-title">
-      <div class="avatar"></div>
+<div class="header">
+<div class="header-title">
+<div class="avatar"></div>
       n8n AI Assistant
     </div>
-    <div class="close" onclick="toggleChat()">✖</div>
-  </div>
-
-  <div class="messages" id="messages"></div>
-
-  <div class="input-area">
-    <input id="input" type="text" placeholder="Type a message..." />
-    <button class="send" onclick="sendMessage()">➤</button>
-  </div>
-
+<div class="close" onclick="toggleChat()">✖</div>
 </div>
-
+<div class="messages" id="messages"></div>
+<div class="input-area">
+<input id="input" placeholder="Type a message..." type="text"/>
+<button class="send" onclick="sendMessage()">➤</button>
+</div>
+</div>
 <script>
   const webhookUrl = "https://molly-preestival-irina.ngrok-free.app/webhook/f7b6e59a-4498-491d-baaf-f6652f66d59a/chat";
 
@@ -232,6 +224,5 @@
     if (e.key === "Enter") sendMessage();
   });
 </script>
-
 </body>
 </html>

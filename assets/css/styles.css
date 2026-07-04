@@ -1482,218 +1482,2067 @@ body.rtl .navbar-brand img {
 }
 
 /* =========================================================
-   KAIROX NAVIGATION RESPONSIVE FIX
-   Fixes:
-   1) Hamburger icon showing on computer/laptop widths.
-   2) Industries dropdown too wide on desktop.
-   This is mobile-first: mobile menu up to 991.98px, full desktop menu from 992px.
+   KAIROX FLOATING CALL + CHAT WIDGET
+   Premium right-side action stack + themed chat panel
    ========================================================= */
 
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
+.kx-floating-actions {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 999998;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  pointer-events: none;
 }
 
-.navbar,
-.navbar > .container {
-  max-width: 100vw;
+.kx-float-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  isolation: isolate;
+  overflow: visible;
+  text-decoration: none;
+  background: linear-gradient(135deg, #041E2B 0%, #06313C 48%, #0B5D5F 100%);
+  box-shadow: 0 18px 50px rgba(4, 30, 43, .34), 0 0 0 1px rgba(201, 164, 74, .22);
+  transition: transform .28s ease, box-shadow .28s ease, filter .28s ease;
 }
 
-.navbar > .container {
+.kx-float-btn:hover,
+.kx-float-btn:focus-visible,
+.kx-float-btn.active {
+  transform: translateY(-4px) scale(1.045);
+  color: #fff;
+  filter: saturate(1.08);
+  box-shadow: 0 24px 64px rgba(4, 30, 43, .40), 0 0 0 1px rgba(230, 200, 115, .48);
+}
+
+.kx-float-call {
+  background: linear-gradient(135deg, #C9A44A 0%, #9E7729 100%);
+  color: #051E2A;
+}
+
+.kx-float-call:hover,
+.kx-float-call:focus-visible {
+  color: #051E2A;
+}
+
+.kx-float-chat {
+  background: linear-gradient(135deg, #041E2B 0%, #06313C 45%, #0F766E 100%);
+}
+
+.kx-float-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: inherit;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  position: relative;
+  z-index: 2;
+}
+
+.kx-float-glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(230, 200, 115, .40), transparent 62%);
+  animation: kxFloatPulse 2.4s ease-out infinite;
+  z-index: -1;
+}
+
+.kx-float-chat .kx-float-glow {
+  background: radial-gradient(circle, rgba(15, 118, 110, .44), transparent 62%);
+}
+
+.kx-float-label {
+  position: absolute;
+  right: 76px;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  padding: .48rem .74rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(3, 26, 35, .92);
+  border: 1px solid rgba(230, 200, 115, .22);
+  box-shadow: 0 12px 34px rgba(4, 30, 43, .22);
+  backdrop-filter: blur(12px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s ease;
+}
+
+.kx-float-btn:hover .kx-float-label,
+.kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+@keyframes kxFloatPulse {
+  0% { transform: scale(.86); opacity: .88; }
+  70% { transform: scale(1.28); opacity: 0; }
+  100% { transform: scale(1.28); opacity: 0; }
+}
+
+/* Premium chat window */
+.kx-chat-window {
+  position: fixed;
+  right: max(96px, calc(env(safe-area-inset-right) + 96px));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  width: min(410px, calc(100vw - 132px));
+  height: min(650px, calc(100vh - 48px));
+  max-height: calc(100vh - 48px);
+  z-index: 999997;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 30px;
+  background: #fff;
+  border: 1px solid rgba(201, 164, 74, .26);
+  box-shadow: 0 34px 100px rgba(4, 30, 43, .34);
+  transform: translateY(16px) scale(.98);
+  opacity: 0;
+}
+
+.kx-chat-window.open {
+  display: flex;
+  animation: kxChatIn .24s ease forwards;
+}
+
+@keyframes kxChatIn {
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.kx-chat-header {
+  position: relative;
+  padding: 1rem;
+  color: #fff;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(230, 200, 115, .22), transparent 32%),
+    radial-gradient(circle at 86% 0%, rgba(15, 118, 110, .32), transparent 34%),
+    linear-gradient(135deg, #031A23 0%, #041E2B 42%, #0B5D5F 100%);
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
 }
 
-.navbar-brand {
-  flex: 0 1 auto;
+.kx-chat-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: .45;
+  pointer-events: none;
+}
+
+.kx-chat-brand,
+.kx-chat-header-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.kx-chat-brand {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
   min-width: 0;
-  margin-right: 0 !important;
 }
 
-.navbar-brand img {
-  width: auto;
-  max-width: min(170px, calc(100vw - 96px));
-  height: auto;
-  max-height: 52px;
+.kx-chat-avatar {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 17px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(230, 200, 115, .42);
+  box-shadow: 0 12px 30px rgba(4, 30, 43, .18);
+}
+
+.kx-chat-avatar img {
+  width: 36px;
+  height: 36px;
   object-fit: contain;
 }
 
-.navbar-toggler {
-  flex: 0 0 auto;
-  margin-left: auto !important;
-  width: 48px;
-  height: 48px;
-  padding: 0 !important;
+.kx-chat-title {
+  font-size: .98rem;
+  font-weight: 950;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kx-chat-status {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 14px;
+  gap: .4rem;
+  font-size: .77rem;
+  color: rgba(255,255,255,.76);
+  margin-top: .15rem;
 }
 
-/* Mobile and tablet: keep hamburger and collapsed menu */
-@media (max-width: 991.98px) {
-  .navbar-toggler {
-    display: inline-flex !important;
+.kx-chat-status span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #27E1A3;
+  box-shadow: 0 0 0 5px rgba(39, 225, 163, .12);
+}
+
+.kx-chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.kx-chat-head-btn {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.kx-chat-head-btn:hover,
+.kx-chat-head-btn:focus-visible {
+  background: rgba(230, 200, 115, .24);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.kx-chat-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(201, 164, 74, .12), transparent 32%),
+    linear-gradient(180deg, #F9F6EF 0%, #F7F2E8 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.kx-chat-intro {
+  margin: .9rem .9rem .3rem;
+  padding: .9rem;
+  border-radius: 22px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(4, 30, 43, .08);
+  box-shadow: 0 10px 30px rgba(4, 30, 43, .06);
+}
+
+.kx-chat-intro-badge {
+  display: inline-flex;
+  width: max-content;
+  padding: .28rem .56rem;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, .10);
+  color: #0B5D5F;
+  font-size: .66rem;
+  font-weight: 950;
+  letter-spacing: .11em;
+  margin-bottom: .45rem;
+}
+
+.kx-chat-intro strong {
+  display: block;
+  color: #041E2B;
+  font-size: .95rem;
+  line-height: 1.3;
+}
+
+.kx-chat-intro p {
+  margin: .28rem 0 0;
+  color: #607073;
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+.kx-chat-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: .75rem .9rem 1rem;
+  scroll-behavior: smooth;
+}
+
+.kx-chat-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 86%;
+  margin-bottom: .75rem;
+}
+
+.kx-chat-msg.user {
+  margin-left: auto;
+  align-items: flex-end;
+}
+
+.kx-chat-msg.bot {
+  margin-right: auto;
+  align-items: flex-start;
+}
+
+.kx-chat-bubble {
+  padding: .78rem .9rem;
+  border-radius: 18px;
+  font-size: .92rem;
+  line-height: 1.45;
+  word-break: break-word;
+  box-shadow: 0 10px 26px rgba(4, 30, 43, .07);
+}
+
+.kx-chat-msg.bot .kx-chat-bubble {
+  color: #253C43;
+  background: #fff;
+  border: 1px solid rgba(4, 30, 43, .08);
+  border-bottom-left-radius: 6px;
+}
+
+.kx-chat-msg.user .kx-chat-bubble {
+  color: #fff;
+  background: linear-gradient(135deg, #0B5D5F 0%, #0F766E 100%);
+  border-bottom-right-radius: 6px;
+}
+
+.kx-chat-meta {
+  margin-top: .25rem;
+  padding: 0 .2rem;
+  font-size: .68rem;
+  color: #7B8B8C;
+}
+
+.kx-chat-typing .kx-chat-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 64px;
+}
+
+.kx-chat-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #0B5D5F;
+  opacity: .35;
+  animation: kxTyping 1.1s ease-in-out infinite;
+}
+
+.kx-chat-typing span:nth-child(2) { animation-delay: .15s; }
+.kx-chat-typing span:nth-child(3) { animation-delay: .3s; }
+
+@keyframes kxTyping {
+  0%, 80%, 100% { transform: translateY(0); opacity: .3; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+
+.kx-chat-quick {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  padding: .72rem .85rem;
+  background: #fff;
+  border-top: 1px solid rgba(4, 30, 43, .08);
+  scrollbar-width: thin;
+}
+
+.kx-chat-quick button,
+.kx-chat-quick a {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  border: 1px solid rgba(11, 93, 95, .16);
+  border-radius: 999px;
+  background: #fff;
+  color: #0B5D5F;
+  padding: .52rem .7rem;
+  font-size: .76rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.kx-chat-quick button:hover,
+.kx-chat-quick a:hover {
+  background: rgba(247, 242, 232, .85);
+  border-color: rgba(201, 164, 74, .44);
+  transform: translateY(-1px);
+}
+
+.kx-chat-typing-note {
+  min-height: 20px;
+  padding: 0 .95rem;
+  color: #657779;
+  background: #fff;
+  font-size: .74rem;
+}
+
+.kx-chat-input-row {
+  display: flex;
+  gap: .55rem;
+  padding: .82rem .85rem .9rem;
+  background: #fff;
+  border-top: 1px solid rgba(4, 30, 43, .08);
+}
+
+.kx-chat-input-row input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid rgba(4, 30, 43, .14);
+  border-radius: 999px;
+  padding: .78rem .95rem;
+  outline: 0;
+  font-size: .92rem;
+}
+
+.kx-chat-input-row input:focus {
+  border-color: #0B5D5F;
+  box-shadow: 0 0 0 .22rem rgba(11, 93, 95, .12);
+}
+
+.kx-chat-input-row button {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #071E28;
+  background: linear-gradient(135deg, #F7E9B4 0%, #C9A44A 68%, #9E7729 100%);
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(201, 164, 74, .22);
+}
+
+/* Keep widgets away from small-screen edges and from mobile sticky bars */
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    right: max(14px, env(safe-area-inset-right));
+    bottom: calc(max(18px, env(safe-area-inset-bottom)) + 72px);
+    gap: 12px;
   }
 
-  .navbar-collapse {
-    width: 100% !important;
-    max-width: calc(100vw - 32px) !important;
-    overflow-x: hidden !important;
-    background: #fff;
-    border: 1px solid rgba(4, 30, 43, .08);
-    border-radius: 22px;
-    margin-top: 1rem;
-    padding: 1rem;
-    box-shadow: 0 20px 60px rgba(4, 30, 43, .08);
+  .kx-float-btn,
+  .kx-float-icon {
+    width: 58px;
+    height: 58px;
   }
 
-  .navbar-nav {
-    align-items: stretch !important;
+  .kx-float-icon {
+    font-size: 1.2rem;
   }
 
-  .navbar .dropdown-menu {
-    position: static !important;
-    transform: none !important;
-    float: none !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    box-shadow: none !important;
-    border-radius: 14px !important;
-    margin-top: .35rem;
+  .kx-float-label {
+    display: none;
   }
 
-  .navbar .dropdown-item,
-  .navbar .nav-link {
-    white-space: normal !important;
-    overflow-wrap: anywhere;
+  .kx-chat-window {
+    right: max(12px, env(safe-area-inset-right));
+    left: max(12px, env(safe-area-inset-left));
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 70px);
+    width: auto;
+    height: min(620px, calc(100vh - 96px));
+    max-height: calc(100vh - 96px);
+    border-radius: 24px;
   }
 
-  .nav-language-toggle {
-    width: 100%;
-    margin-top: .4rem;
+  .kx-chat-intro {
+    margin: .75rem .75rem .25rem;
+  }
+
+  .kx-chat-messages {
+    padding-inline: .75rem;
   }
 }
 
-/* Computers/laptops: force full navigation, hide hamburger */
-@media (min-width: 992px) {
-  .navbar-expand-lg .navbar-toggler,
-  .navbar-toggler {
+@media (max-width: 380px) {
+  .kx-chat-window {
+    left: 8px;
+    right: 8px;
+  }
+
+  .kx-chat-title {
+    max-width: 155px;
+  }
+
+  .kx-chat-head-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .kx-chat-header {
+    padding: .85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-float-glow,
+  .kx-chat-typing span,
+  .kx-chat-window.open {
+    animation: none !important;
+  }
+
+  .kx-float-btn,
+  .kx-chat-head-btn,
+  .kx-chat-quick button,
+  .kx-chat-quick a {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON FLOATING ACTIONS - MID RIGHT, SCROLL REVEAL
+   Overrides previous bottom floating widget placement.
+   ========================================================= */
+
+.kx-floating-actions {
+  position: fixed !important;
+  right: 0 !important;
+  top: 50% !important;
+  bottom: auto !important;
+  z-index: 999998 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 0 !important;
+  pointer-events: none !important;
+  transform: translate(104%, -50%) !important;
+  opacity: 0 !important;
+  transition: transform .55s cubic-bezier(.22,1,.36,1), opacity .35s ease !important;
+  will-change: transform, opacity;
+}
+
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+  opacity: 1 !important;
+}
+
+.kx-action-ribbon {
+  position: relative;
+  pointer-events: auto;
+  display: grid;
+  gap: 10px;
+  padding: 14px 10px 14px 14px;
+  border-radius: 26px 0 0 26px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(230, 200, 115, .22), transparent 38%),
+    linear-gradient(145deg, rgba(3,26,35,.96) 0%, rgba(4,30,43,.98) 42%, rgba(11,93,95,.94) 100%);
+  border: 1px solid rgba(230, 200, 115, .32);
+  border-right: 0;
+  box-shadow:
+    0 24px 75px rgba(4,30,43,.34),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 0 1px rgba(11,93,95,.08);
+  backdrop-filter: blur(18px);
+  overflow: visible;
+}
+
+.kx-action-ribbon::before {
+  content: "KAIROX";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-size: .56rem;
+  letter-spacing: .18em;
+  font-weight: 950;
+  color: rgba(230,200,115,.56);
+  pointer-events: none;
+}
+
+.kx-action-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: 8px 5px 8px 8px;
+  border-radius: 20px 0 0 20px;
+  border: 1px solid rgba(255,255,255,.08);
+  pointer-events: none;
+}
+
+.kx-ribbon-edge {
+  position: absolute;
+  left: -10px;
+  top: 16px;
+  bottom: 16px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent 0%, #E6C873 18%, #0F766E 52%, #E6C873 85%, transparent 100%);
+  box-shadow: 0 0 26px rgba(230,200,115,.45);
+  pointer-events: none;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  position: relative !important;
+  width: 58px !important;
+  height: 58px !important;
+  border: 0 !important;
+  border-radius: 20px !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+  text-decoration: none !important;
+  color: #fff !important;
+  background: rgba(255,255,255,.09) !important;
+  box-shadow:
+    0 14px 34px rgba(4,30,43,.22),
+    inset 0 1px 0 rgba(255,255,255,.13),
+    0 0 0 1px rgba(255,255,255,.10) !important;
+  transition: transform .25s ease, background .25s ease, box-shadow .25s ease !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  background: linear-gradient(135deg, #F7E9B4 0%, #C9A44A 58%, #9E7729 100%) !important;
+  color: #041E2B !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  background: linear-gradient(135deg, rgba(11,93,95,.98) 0%, rgba(15,118,110,.95) 100%) !important;
+  color: #fff !important;
+}
+
+.kx-action-ribbon .kx-float-btn::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 24px;
+  background: radial-gradient(circle, rgba(230,200,115,.25), transparent 68%);
+  opacity: 0;
+  transform: scale(.90);
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: -1;
+}
+
+.kx-action-ribbon .kx-float-chat::before {
+  background: radial-gradient(circle, rgba(15,118,110,.40), transparent 68%);
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  transform: translateX(-5px) scale(1.045) !important;
+  box-shadow:
+    0 20px 46px rgba(4,30,43,.32),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 0 1px rgba(230,200,115,.35) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover::before,
+.kx-action-ribbon .kx-float-btn:focus-visible::before,
+.kx-action-ribbon .kx-float-btn.active::before {
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.kx-action-ribbon .kx-float-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.25rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.kx-action-ribbon .kx-float-label {
+  position: absolute !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  white-space: nowrap !important;
+  padding: .48rem .74rem !important;
+  border-radius: 999px !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  color: #fff !important;
+  background: rgba(3,26,35,.94) !important;
+  border: 1px solid rgba(230,200,115,.26) !important;
+  box-shadow: 0 12px 34px rgba(4,30,43,.22) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover .kx-float-label,
+.kx-action-ribbon .kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+/* Reposition chat panel beside the mid-screen ribbon */
+.kx-chat-window {
+  right: 98px !important;
+  top: 50% !important;
+  bottom: auto !important;
+  width: min(410px, calc(100vw - 130px)) !important;
+  height: min(650px, calc(100vh - 44px)) !important;
+  max-height: calc(100vh - 44px) !important;
+  transform: translateY(calc(-50% + 16px)) scale(.98) !important;
+}
+
+.kx-chat-window.open {
+  animation: kxChatRibbonIn .28s cubic-bezier(.22,1,.36,1) forwards !important;
+}
+
+@keyframes kxChatRibbonIn {
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    right: 0 !important;
+    top: 50% !important;
+    bottom: auto !important;
+  }
+
+  .kx-action-ribbon {
+    gap: 8px;
+    padding: 12px 8px 12px 12px;
+    border-radius: 22px 0 0 22px;
+  }
+
+  .kx-action-ribbon::before {
+    display: none;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 18px !important;
+  }
+
+  .kx-action-ribbon .kx-float-icon {
+    font-size: 1.08rem !important;
+  }
+
+  .kx-action-ribbon .kx-float-label {
     display: none !important;
   }
 
-  .navbar-expand-lg .navbar-collapse,
-  .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto !important;
+  .kx-chat-window {
+    left: max(12px, env(safe-area-inset-left)) !important;
+    right: max(76px, calc(env(safe-area-inset-right) + 76px)) !important;
+    top: 50% !important;
+    bottom: auto !important;
     width: auto !important;
-    max-width: none !important;
-    overflow: visible !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    margin-top: 0 !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+    border-radius: 24px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .kx-chat-window {
+    left: 8px !important;
+    right: 70px !important;
   }
 
-  .navbar-expand-lg .navbar-nav,
-  .navbar-nav {
-    flex-direction: row !important;
-    align-items: center !important;
+  .kx-chat-title {
+    max-width: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions,
+  .kx-action-ribbon .kx-float-btn,
+  .kx-chat-window.open {
+    transition: none !important;
+    animation: none !important;
   }
 
-  .navbar .nav-link {
-    white-space: nowrap !important;
-    font-size: clamp(.78rem, .76vw, .9rem);
-    padding-left: clamp(.28rem, .42vw, .55rem) !important;
-    padding-right: clamp(.28rem, .42vw, .55rem) !important;
+  .kx-floating-actions.is-visible {
+    transform: translate(0, -50%) !important;
+    opacity: 1 !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON MANUAL EXPAND / COLLAPSE CONTROL
+   Adds < expand and > collapse arrow tab while preserving scroll reveal.
+   ========================================================= */
+
+.kx-floating-actions {
+  transform: translate(100%, -50%) !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+}
+
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+  opacity: 1 !important;
+}
+
+.kx-ribbon-toggle {
+  position: absolute !important;
+  left: -38px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 38px !important;
+  height: 88px !important;
+  border: 1px solid rgba(230,200,115,.34) !important;
+  border-right: 0 !important;
+  border-radius: 20px 0 0 20px !important;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(230,200,115,.22), transparent 42%),
+    linear-gradient(145deg, rgba(3,26,35,.98) 0%, rgba(4,30,43,.98) 52%, rgba(11,93,95,.94) 100%) !important;
+  color: #E6C873 !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 1.1rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  z-index: 3 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  box-shadow:
+    -10px 18px 42px rgba(4,30,43,.26),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 22px rgba(11,93,95,.20) !important;
+  transition: color .22s ease, transform .22s ease, box-shadow .22s ease !important;
+}
+
+.kx-ribbon-toggle:hover,
+.kx-ribbon-toggle:focus-visible {
+  color: #fff !important;
+  transform: translateY(-50%) translateX(-2px) !important;
+  box-shadow:
+    -14px 22px 50px rgba(4,30,43,.30),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 0 28px rgba(230,200,115,.26) !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle::before {
+  content: "";
+  position: absolute;
+  inset: 9px 5px 9px 8px;
+  border-radius: 14px 0 0 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  pointer-events: none;
+}
+
+.kx-ribbon-toggle::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 3px;
+  height: 46px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent 0%, #E6C873 24%, #0F766E 50%, #E6C873 76%, transparent 100%);
+  opacity: .78;
+  pointer-events: none;
+}
+
+.kx-ribbon-toggle span {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  transform: scaleX(.92);
+}
+
+.kx-ribbon-toggle .kx-toggle-collapse {
+  display: none;
+}
+
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-expand {
+  display: none;
+}
+
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-collapse {
+  display: inline-block;
+}
+
+.kx-floating-actions.is-manual-collapsed .kx-ribbon-toggle {
+  animation: kxRibbonHint 2.4s ease-in-out infinite;
+}
+
+@keyframes kxRibbonHint {
+  0%, 100% { box-shadow: -10px 18px 42px rgba(4,30,43,.24), 0 0 0 rgba(230,200,115,0); }
+  50% { box-shadow: -12px 22px 48px rgba(4,30,43,.28), 0 0 24px rgba(230,200,115,.20); }
+}
+
+@media (max-width: 767.98px) {
+  .kx-ribbon-toggle {
+    left: -34px !important;
+    width: 34px !important;
+    height: 78px !important;
+    border-radius: 18px 0 0 18px !important;
+    font-size: 1rem !important;
   }
 
-  .navbar .btn-sm {
-    white-space: nowrap !important;
-    font-size: clamp(.76rem, .72vw, .86rem);
-    padding: .54rem clamp(.68rem, .8vw, .95rem) !important;
+  .kx-ribbon-toggle::after {
+    height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions.is-manual-collapsed .kx-ribbon-toggle {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON FLOATING ACTIONS V4
+   Beautiful manual chevron tab + reliable manual override.
+   Behavior:
+   - Hidden by default, only the tab remains visible.
+   - Auto expands on scroll only before manual control is used.
+   - Auto collapses after 60 seconds only in auto mode.
+   - Manual expand/collapse overrides auto behavior.
+   ========================================================= */
+
+:root {
+  --kx-ribbon-tab-width: 46px;
+  --kx-ribbon-body-width: 76px;
+  --kx-ribbon-total-width: calc(var(--kx-ribbon-tab-width) + var(--kx-ribbon-body-width));
+}
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: var(--kx-ribbon-total-width) !important;
+  z-index: 999998 !important;
+  transform: translate(calc(100% - var(--kx-ribbon-tab-width)), -50%) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1), filter .28s ease !important;
+  will-change: transform !important;
+}
+
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-floating-actions.is-collapsed {
+  transform: translate(calc(100% - var(--kx-ribbon-tab-width)), -50%) !important;
+}
+
+.kx-action-ribbon {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: var(--kx-ribbon-tab-width) var(--kx-ribbon-body-width) !important;
+  align-items: center !important;
+  width: var(--kx-ribbon-total-width) !important;
+  min-height: 172px !important;
+  border-radius: 28px 0 0 28px !important;
+  background:
+    radial-gradient(circle at 22% 15%, rgba(230,200,115,.20), transparent 36%),
+    radial-gradient(circle at 80% 86%, rgba(15,118,110,.35), transparent 42%),
+    linear-gradient(145deg, rgba(3,26,35,.98) 0%, rgba(4,30,43,.98) 48%, rgba(11,93,95,.94) 100%) !important;
+  border: 1px solid rgba(230,200,115,.34) !important;
+  border-right: 0 !important;
+  box-shadow:
+    -22px 26px 70px rgba(4,30,43,.30),
+    inset 0 1px 0 rgba(255,255,255,.11),
+    0 0 32px rgba(11,93,95,.18) !important;
+  backdrop-filter: blur(18px) !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+.kx-action-ribbon::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 10px 8px 10px 10px !important;
+  border-radius: 22px 0 0 22px !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  pointer-events: none !important;
+}
+
+.kx-action-ribbon::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 41px !important;
+  top: 18px !important;
+  bottom: 18px !important;
+  width: 1px !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(230,200,115,.55) 22%, rgba(15,118,110,.50) 50%, rgba(230,200,115,.55) 78%, transparent 100%) !important;
+  pointer-events: none !important;
+}
+
+.kx-ribbon-toggle {
+  position: relative !important;
+  width: var(--kx-ribbon-tab-width) !important;
+  height: 100% !important;
+  min-height: 172px !important;
+  border: 0 !important;
+  border-radius: 28px 0 0 28px !important;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(230,200,115,.18), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.015)) !important;
+  color: #E6C873 !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 4 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle-inner {
+  width: 34px !important;
+  height: 62px !important;
+  border-radius: 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #041E2B !important;
+  background: linear-gradient(135deg, #F7E9B4 0%, #C9A44A 62%, #9E7729 100%) !important;
+  box-shadow:
+    0 14px 32px rgba(4,30,43,.30),
+    inset 0 1px 0 rgba(255,255,255,.38),
+    0 0 0 1px rgba(255,255,255,.12) !important;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease !important;
+}
+
+.kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner {
+  transform: translateX(-2px) scale(1.04) !important;
+  filter: saturate(1.08) !important;
+  box-shadow:
+    0 18px 42px rgba(4,30,43,.34),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    0 0 24px rgba(230,200,115,.30) !important;
+}
+
+.kx-ribbon-toggle i {
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.kx-ribbon-toggle .kx-toggle-collapse { display: none !important; }
+.kx-ribbon-toggle .kx-toggle-expand { display: inline-block !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-expand { display: none !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-collapse { display: inline-block !important; }
+
+.kx-floating-actions.is-manual-mode .kx-ribbon-toggle-inner {
+  animation: kxRibbonManualGlow 2.8s ease-in-out infinite !important;
+}
+
+@keyframes kxRibbonManualGlow {
+  0%, 100% { box-shadow: 0 14px 32px rgba(4,30,43,.30), inset 0 1px 0 rgba(255,255,255,.38), 0 0 0 rgba(230,200,115,0); }
+  50% { box-shadow: 0 18px 42px rgba(4,30,43,.34), inset 0 1px 0 rgba(255,255,255,.42), 0 0 26px rgba(230,200,115,.24); }
+}
+
+.kx-ribbon-buttons {
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: var(--kx-ribbon-body-width) !important;
+  padding: 14px 10px 14px 8px !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  position: relative !important;
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  border: 0 !important;
+  border-radius: 20px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  color: #fff !important;
+  background: rgba(255,255,255,.09) !important;
+  box-shadow:
+    0 14px 34px rgba(4,30,43,.22),
+    inset 0 1px 0 rgba(255,255,255,.13),
+    0 0 0 1px rgba(255,255,255,.10) !important;
+  transition: transform .25s ease, background .25s ease, box-shadow .25s ease !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  background: linear-gradient(135deg, #F7E9B4 0%, #C9A44A 58%, #9E7729 100%) !important;
+  color: #041E2B !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  background: linear-gradient(135deg, rgba(11,93,95,.98) 0%, rgba(15,118,110,.95) 100%) !important;
+  color: #fff !important;
+}
+
+.kx-action-ribbon .kx-float-btn::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -5px !important;
+  border-radius: 24px !important;
+  background: radial-gradient(circle, rgba(230,200,115,.25), transparent 68%) !important;
+  opacity: 0 !important;
+  transform: scale(.90) !important;
+  transition: opacity .25s ease, transform .25s ease !important;
+  z-index: -1 !important;
+}
+
+.kx-action-ribbon .kx-float-chat::before {
+  background: radial-gradient(circle, rgba(15,118,110,.40), transparent 68%) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  transform: translateX(-5px) scale(1.045) !important;
+  box-shadow:
+    0 20px 46px rgba(4,30,43,.32),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 0 1px rgba(230,200,115,.35) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover::before,
+.kx-action-ribbon .kx-float-btn:focus-visible::before,
+.kx-action-ribbon .kx-float-btn.active::before {
+  opacity: 1 !important;
+  transform: scale(1.12) !important;
+}
+
+.kx-action-ribbon .kx-float-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.18rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.kx-action-ribbon .kx-float-label {
+  position: absolute !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  white-space: nowrap !important;
+  padding: .48rem .74rem !important;
+  border-radius: 999px !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  color: #fff !important;
+  background: rgba(3,26,35,.94) !important;
+  border: 1px solid rgba(230,200,115,.26) !important;
+  box-shadow: 0 12px 34px rgba(4,30,43,.22) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover .kx-float-label,
+.kx-action-ribbon .kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+/* Chat window sits beside the expanded ribbon */
+.kx-chat-window {
+  right: calc(var(--kx-ribbon-total-width) + 12px) !important;
+  top: 50% !important;
+  bottom: auto !important;
+  width: min(410px, calc(100vw - 150px)) !important;
+  height: min(650px, calc(100vh - 44px)) !important;
+  max-height: calc(100vh - 44px) !important;
+  transform: translateY(calc(-50% + 16px)) scale(.98) !important;
+  opacity: 0 !important;
+}
+
+.kx-chat-window.open {
+  animation: kxChatRibbonIn .28s cubic-bezier(.22,1,.36,1) forwards !important;
+}
+
+@keyframes kxChatRibbonIn {
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-tab-width: 40px;
+    --kx-ribbon-body-width: 66px;
   }
 
-  .nav-language-toggle {
-    width: auto !important;
-    max-width: 92px;
-    font-size: .78rem;
-    padding: .36rem .52rem;
-  }
-
-  .navbar .dropdown {
-    position: relative;
-  }
-
-  .navbar .dropdown-menu {
-    width: auto !important;
-    min-width: 14.25rem !important;
-    max-width: 17.5rem !important;
-    padding: .55rem !important;
-    border-radius: 16px !important;
-    box-shadow: 0 22px 70px rgba(4, 30, 43, .15) !important;
-    overflow: hidden;
-  }
-
-  .navbar .dropdown-menu-lg-end,
-  .navbar .dropdown-menu-xl-end {
+  .kx-floating-actions {
+    top: 50% !important;
     right: 0 !important;
-    left: auto !important;
   }
 
-  .navbar .dropdown-item {
-    white-space: normal !important;
-    line-height: 1.25;
-    padding: .58rem .72rem;
+  .kx-action-ribbon {
+    min-height: 154px !important;
+    border-radius: 24px 0 0 24px !important;
+  }
+
+  .kx-action-ribbon::after {
+    left: 36px !important;
+  }
+
+  .kx-ribbon-toggle {
+    min-height: 154px !important;
+    border-radius: 24px 0 0 24px !important;
+  }
+
+  .kx-ribbon-toggle-inner {
+    width: 30px !important;
+    height: 54px !important;
+  }
+
+  .kx-ribbon-toggle i {
+    font-size: 1.1rem !important;
+  }
+
+  .kx-ribbon-buttons {
+    gap: 9px !important;
+    padding: 12px 8px 12px 7px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 18px !important;
+  }
+
+  .kx-action-ribbon .kx-float-icon {
+    font-size: 1.02rem !important;
+  }
+
+  .kx-action-ribbon .kx-float-label {
+    display: none !important;
+  }
+
+  .kx-chat-window {
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: calc(var(--kx-ribbon-total-width) + 8px) !important;
+    top: 50% !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+    border-radius: 24px !important;
   }
 }
 
-/* Tight laptop widths: keep desktop menu but reduce spacing so it fits cleanly */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .navbar > .container {
-    max-width: 100% !important;
-    padding-left: 18px !important;
-    padding-right: 18px !important;
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-tab-width: 38px;
+    --kx-ribbon-body-width: 62px;
   }
 
-  .navbar-brand img {
-    max-width: 136px;
-    max-height: 44px;
+  .kx-action-ribbon .kx-float-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
   }
 
-  .navbar .nav-link {
-    font-size: .76rem !important;
-    padding-left: .26rem !important;
-    padding-right: .26rem !important;
+  .kx-chat-window {
+    left: 8px !important;
+    right: calc(var(--kx-ribbon-total-width) + 6px) !important;
   }
 
-  .navbar .btn-sm {
-    font-size: .74rem !important;
-    padding: .48rem .62rem !important;
-  }
+  .kx-chat-title { max-width: 150px !important; }
+}
 
-  .nav-language-toggle {
-    max-width: 78px;
-    font-size: .72rem;
-    padding: .32rem .42rem;
-  }
-
-  .navbar-nav {
-    gap: 0 !important;
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions,
+  .kx-ribbon-toggle-inner,
+  .kx-action-ribbon .kx-float-btn,
+  .kx-chat-window.open,
+  .kx-floating-actions.is-manual-mode .kx-ribbon-toggle-inner {
+    transition: none !important;
+    animation: none !important;
   }
 }
 
-@media (min-width: 1200px) {
-  .navbar-brand img {
-    max-width: 170px;
+
+
+/* =========================================================
+   KAIROX RIBBON FLOATING ACTIONS V5
+   Polished compact professional ribbon
+   - Removes the large empty gap between tab and content
+   - Makes the gold chevron tab overlap the ribbon body cleanly
+   - Keeps manual expand/collapse and scroll-reveal behavior
+   ========================================================= */
+
+:root {
+  --kx-ribbon-body-width: 84px;
+  --kx-ribbon-tab-width: 42px;
+  --kx-ribbon-tab-offset: 22px;
+  --kx-ribbon-peek: 28px;
+  --kx-ribbon-chat-gap: 34px;
+}
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: var(--kx-ribbon-body-width) !important;
+  height: auto !important;
+  z-index: 999998 !important;
+  transform: translate(calc(100% - var(--kx-ribbon-peek)), -50%) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  transition: transform .44s cubic-bezier(.22, 1, .36, 1), filter .28s ease !important;
+  will-change: transform !important;
+}
+
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-floating-actions.is-collapsed {
+  transform: translate(calc(100% - var(--kx-ribbon-peek)), -50%) !important;
+}
+
+.kx-action-ribbon {
+  position: relative !important;
+  display: block !important;
+  width: var(--kx-ribbon-body-width) !important;
+  min-height: 160px !important;
+  padding: 16px 10px 16px 18px !important;
+  border-radius: 28px 0 0 28px !important;
+  background:
+    radial-gradient(circle at 0% 20%, rgba(230,200,115,.22), transparent 36%),
+    radial-gradient(circle at 90% 85%, rgba(15,118,110,.42), transparent 48%),
+    linear-gradient(145deg, rgba(3,26,35,.985) 0%, rgba(4,30,43,.985) 46%, rgba(11,93,95,.96) 100%) !important;
+  border: 1px solid rgba(230,200,115,.34) !important;
+  border-right: 0 !important;
+  box-shadow:
+    -22px 26px 70px rgba(4,30,43,.32),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 12px 0 22px rgba(230,200,115,.045),
+    0 0 34px rgba(11,93,95,.20) !important;
+  backdrop-filter: blur(18px) !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+.kx-action-ribbon::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 10px 7px 10px 12px !important;
+  border-radius: 22px 0 0 22px !important;
+  border: 1px solid rgba(255,255,255,.085) !important;
+  background: linear-gradient(90deg, rgba(255,255,255,.045), transparent 56%) !important;
+  pointer-events: none !important;
+}
+
+.kx-action-ribbon::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 22px !important;
+  bottom: 22px !important;
+  width: 2px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(230,200,115,.58) 18%, rgba(15,118,110,.62) 50%, rgba(230,200,115,.58) 82%, transparent 100%) !important;
+  opacity: .72 !important;
+  pointer-events: none !important;
+}
+
+/* Premium overlapping chevron tab */
+.kx-ribbon-toggle {
+  position: absolute !important;
+  left: calc(var(--kx-ribbon-tab-offset) * -1) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: var(--kx-ribbon-tab-width) !important;
+  height: 76px !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  border-radius: 999px 0 0 999px !important;
+  background: transparent !important;
+  color: #041E2B !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 6 !important;
+  padding: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.kx-ribbon-toggle-inner {
+  position: relative !important;
+  width: var(--kx-ribbon-tab-width) !important;
+  height: 76px !important;
+  border-radius: 999px 0 0 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #041E2B !important;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.42), transparent 36%),
+    linear-gradient(135deg, #F7E9B4 0%, #E6C873 38%, #C9A44A 68%, #9E7729 100%) !important;
+  border: 1px solid rgba(255,255,255,.24) !important;
+  border-right: 0 !important;
+  box-shadow:
+    -8px 12px 30px rgba(4,30,43,.26),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset -8px 0 16px rgba(4,30,43,.12),
+    0 0 22px rgba(230,200,115,.22) !important;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease !important;
+}
+
+.kx-ribbon-toggle-inner::before {
+  content: "" !important;
+  position: absolute !important;
+  right: 6px !important;
+  top: 12px !important;
+  bottom: 12px !important;
+  width: 1px !important;
+  border-radius: 999px !important;
+  background: rgba(4,30,43,.18) !important;
+}
+
+.kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner {
+  transform: translateX(-2px) scale(1.035) !important;
+  filter: saturate(1.08) !important;
+  box-shadow:
+    -10px 16px 38px rgba(4,30,43,.32),
+    inset 0 1px 0 rgba(255,255,255,.48),
+    inset -8px 0 16px rgba(4,30,43,.10),
+    0 0 30px rgba(230,200,115,.34) !important;
+}
+
+.kx-ribbon-toggle i {
+  font-size: 1.2rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.20)) !important;
+}
+
+.kx-ribbon-toggle .kx-toggle-collapse { display: none !important; }
+.kx-ribbon-toggle .kx-toggle-expand { display: inline-block !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-expand { display: none !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-collapse { display: inline-block !important; }
+
+.kx-floating-actions.is-manual-mode .kx-ribbon-toggle-inner {
+  animation: kxRibbonManualGlowV5 3s ease-in-out infinite !important;
+}
+
+@keyframes kxRibbonManualGlowV5 {
+  0%, 100% {
+    box-shadow: -8px 12px 30px rgba(4,30,43,.26), inset 0 1px 0 rgba(255,255,255,.42), inset -8px 0 16px rgba(4,30,43,.12), 0 0 14px rgba(230,200,115,.16);
+  }
+  50% {
+    box-shadow: -10px 16px 38px rgba(4,30,43,.32), inset 0 1px 0 rgba(255,255,255,.48), inset -8px 0 16px rgba(4,30,43,.10), 0 0 32px rgba(230,200,115,.32);
+  }
+}
+
+/* Buttons now sit immediately beside the tab, no empty dead space */
+.kx-ribbon-buttons {
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 11px !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  position: relative !important;
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  border: 0 !important;
+  border-radius: 19px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  color: #fff !important;
+  box-shadow:
+    0 14px 34px rgba(4,30,43,.24),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 0 1px rgba(255,255,255,.10) !important;
+  transition: transform .25s ease, background .25s ease, box-shadow .25s ease !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.34), transparent 36%),
+    linear-gradient(135deg, #F7E9B4 0%, #C9A44A 60%, #9E7729 100%) !important;
+  color: #041E2B !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.14), transparent 36%),
+    linear-gradient(135deg, rgba(11,93,95,.99) 0%, rgba(15,118,110,.95) 100%) !important;
+  color: #fff !important;
+}
+
+.kx-action-ribbon .kx-float-btn::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -5px !important;
+  border-radius: 24px !important;
+  background: radial-gradient(circle, rgba(230,200,115,.24), transparent 68%) !important;
+  opacity: 0 !important;
+  transform: scale(.90) !important;
+  transition: opacity .25s ease, transform .25s ease !important;
+  z-index: -1 !important;
+}
+
+.kx-action-ribbon .kx-float-chat::before {
+  background: radial-gradient(circle, rgba(15,118,110,.40), transparent 68%) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  transform: translateX(-4px) scale(1.045) !important;
+  box-shadow:
+    0 20px 46px rgba(4,30,43,.34),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 0 0 1px rgba(230,200,115,.38) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover::before,
+.kx-action-ribbon .kx-float-btn:focus-visible::before,
+.kx-action-ribbon .kx-float-btn.active::before {
+  opacity: 1 !important;
+  transform: scale(1.10) !important;
+}
+
+.kx-action-ribbon .kx-float-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.16rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.kx-action-ribbon .kx-float-label {
+  position: absolute !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  white-space: nowrap !important;
+  padding: .48rem .74rem !important;
+  border-radius: 999px !important;
+  font-size: .76rem !important;
+  font-weight: 950 !important;
+  color: #fff !important;
+  background: rgba(3,26,35,.94) !important;
+  border: 1px solid rgba(230,200,115,.26) !important;
+  box-shadow: 0 12px 34px rgba(4,30,43,.22) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: opacity .22s ease, transform .22s ease, visibility .22s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover .kx-float-label,
+.kx-action-ribbon .kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+/* Chat window sits beside the polished ribbon */
+.kx-chat-window {
+  right: calc(var(--kx-ribbon-body-width) + var(--kx-ribbon-chat-gap)) !important;
+  top: 50% !important;
+  bottom: auto !important;
+  width: min(410px, calc(100vw - 150px)) !important;
+  height: min(650px, calc(100vh - 44px)) !important;
+  max-height: calc(100vh - 44px) !important;
+  transform: translateY(calc(-50% + 16px)) scale(.98) !important;
+  opacity: 0 !important;
+}
+
+.kx-chat-window.open {
+  animation: kxChatRibbonInV5 .28s cubic-bezier(.22,1,.36,1) forwards !important;
+}
+
+@keyframes kxChatRibbonInV5 {
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-body-width: 76px;
+    --kx-ribbon-tab-width: 38px;
+    --kx-ribbon-tab-offset: 20px;
+    --kx-ribbon-peek: 25px;
+    --kx-ribbon-chat-gap: 26px;
   }
 
-  .navbar .dropdown-menu {
-    min-width: 15rem !important;
-    max-width: 18rem !important;
+  .kx-action-ribbon {
+    min-height: 150px !important;
+    padding: 13px 8px 13px 16px !important;
+    border-radius: 24px 0 0 24px !important;
   }
+
+  .kx-ribbon-toggle,
+  .kx-ribbon-toggle-inner {
+    height: 66px !important;
+  }
+
+  .kx-ribbon-toggle i {
+    font-size: 1.05rem !important;
+  }
+
+  .kx-ribbon-buttons {
+    gap: 9px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 17px !important;
+  }
+
+  .kx-action-ribbon .kx-float-icon {
+    font-size: 1rem !important;
+  }
+
+  .kx-action-ribbon .kx-float-label {
+    display: none !important;
+  }
+
+  .kx-chat-window {
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: calc(var(--kx-ribbon-body-width) + 8px) !important;
+    top: 50% !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+    border-radius: 24px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-body-width: 72px;
+    --kx-ribbon-tab-width: 36px;
+    --kx-ribbon-tab-offset: 19px;
+    --kx-ribbon-peek: 24px;
+  }
+
+  .kx-action-ribbon {
+    padding-left: 15px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+  }
+
+  .kx-chat-window {
+    left: 8px !important;
+    right: calc(var(--kx-ribbon-body-width) + 6px) !important;
+  }
+
+  .kx-chat-title { max-width: 150px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions,
+  .kx-ribbon-toggle-inner,
+  .kx-action-ribbon .kx-float-btn,
+  .kx-chat-window.open,
+  .kx-floating-actions.is-manual-mode .kx-ribbon-toggle-inner {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+
+/* =========================================================
+   KAIROX RIBBON FLOATING ACTIONS V6
+   Clean, elegant, uncluttered premium redesign
+   ========================================================= */
+
+:root {
+  --kx-ribbon-body-width: 86px;
+  --kx-ribbon-tab-width: 34px;
+  --kx-ribbon-tab-height: 72px;
+  --kx-ribbon-peek: 22px;
+  --kx-ribbon-chat-gap: 26px;
+}
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: var(--kx-ribbon-body-width) !important;
+  z-index: 999998 !important;
+  transform: translate(calc(100% - var(--kx-ribbon-peek)), -50%) !important;
+  transition: transform .42s cubic-bezier(.22,1,.36,1) !important;
+  overflow: visible !important;
+  will-change: transform !important;
+}
+
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-floating-actions.is-collapsed {
+  transform: translate(calc(100% - var(--kx-ribbon-peek)), -50%) !important;
+}
+
+.kx-action-ribbon {
+  position: relative !important;
+  width: var(--kx-ribbon-body-width) !important;
+  min-height: 150px !important;
+  padding: 16px 12px 16px 18px !important;
+  border-radius: 26px 0 0 26px !important;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(230,200,115,.16), transparent 34%),
+    radial-gradient(circle at 92% 88%, rgba(15,118,110,.34), transparent 46%),
+    linear-gradient(160deg, rgba(3,26,35,.985) 0%, rgba(4,30,43,.985) 46%, rgba(11,93,95,.96) 100%) !important;
+  border: 1px solid rgba(230,200,115,.26) !important;
+  border-right: 0 !important;
+  box-shadow:
+    -18px 26px 65px rgba(4,30,43,.28),
+    inset 0 1px 0 rgba(255,255,255,.11) !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+.kx-action-ribbon::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 9px 8px 9px 12px !important;
+  border-radius: 20px 0 0 20px !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  pointer-events: none !important;
+}
+
+.kx-action-ribbon::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 10px !important;
+  top: 24px !important;
+  bottom: 24px !important;
+  width: 1px !important;
+  background: linear-gradient(180deg, transparent, rgba(230,200,115,.42), rgba(15,118,110,.52), rgba(230,200,115,.42), transparent) !important;
+  pointer-events: none !important;
+  opacity: .72 !important;
+}
+
+.kx-ribbon-buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  position: relative !important;
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  box-shadow:
+    0 12px 28px rgba(4,30,43,.22),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 0 0 1px rgba(255,255,255,.08) !important;
+  transition: transform .24s ease, box-shadow .24s ease, filter .24s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  transform: translateX(-3px) scale(1.03) !important;
+  box-shadow:
+    0 16px 34px rgba(4,30,43,.28),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 0 0 1px rgba(230,200,115,.24) !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  color: #041E2B !important;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,255,255,.30), transparent 36%),
+    linear-gradient(135deg, #F5E4A4 0%, #D8B45A 60%, #AE842C 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,255,255,.12), transparent 36%),
+    linear-gradient(135deg, #0C6B67 0%, #0F766E 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.12rem !important;
+  line-height: 1 !important;
+}
+
+.kx-action-ribbon .kx-float-label {
+  position: absolute !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  white-space: nowrap !important;
+  padding: .42rem .7rem !important;
+  border-radius: 999px !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  background: rgba(3,26,35,.94) !important;
+  border: 1px solid rgba(230,200,115,.22) !important;
+  box-shadow: 0 10px 28px rgba(4,30,43,.18) !important;
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover .kx-float-label,
+.kx-action-ribbon .kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+/* Beautiful slim side tab */
+.kx-ribbon-toggle {
+  position: absolute !important;
+  left: -18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 34px !important;
+  height: var(--kx-ribbon-tab-height) !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  z-index: 6 !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle-inner {
+  position: relative !important;
+  width: 34px !important;
+  height: var(--kx-ribbon-tab-height) !important;
+  border-radius: 999px 0 0 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #18323A !important;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255,255,255,.34), transparent 40%),
+    linear-gradient(180deg, #F2DE95 0%, #D3AE52 62%, #B6862D 100%) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-right: 0 !important;
+  box-shadow:
+    -6px 10px 28px rgba(4,30,43,.22),
+    inset 0 1px 0 rgba(255,255,255,.34) !important;
+  transition: transform .22s ease, box-shadow .22s ease !important;
+}
+
+.kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner {
+  transform: translateX(-1px) !important;
+  box-shadow:
+    -8px 14px 30px rgba(4,30,43,.26),
+    inset 0 1px 0 rgba(255,255,255,.40) !important;
+}
+
+.kx-ribbon-toggle i {
+  font-size: 1rem !important;
+  line-height: 1 !important;
+}
+
+.kx-ribbon-toggle .kx-toggle-collapse { display: none !important; }
+.kx-ribbon-toggle .kx-toggle-expand { display: inline-block !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-expand { display: none !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-collapse { display: inline-block !important; }
+
+.kx-floating-actions.is-manual-mode .kx-ribbon-toggle-inner {
+  box-shadow:
+    -8px 14px 30px rgba(4,30,43,.26),
+    inset 0 1px 0 rgba(255,255,255,.40),
+    0 0 0 1px rgba(230,200,115,.12) !important;
+}
+
+/* Chat sits neatly away from the ribbon */
+.kx-chat-window {
+  right: calc(var(--kx-ribbon-body-width) + var(--kx-ribbon-chat-gap)) !important;
+  top: 50% !important;
+  bottom: auto !important;
+  width: min(410px, calc(100vw - 150px)) !important;
+  height: min(650px, calc(100vh - 44px)) !important;
+  max-height: calc(100vh - 44px) !important;
+  transform: translateY(calc(-50% + 14px)) scale(.98) !important;
+  opacity: 0 !important;
+}
+
+.kx-chat-window.open {
+  animation: kxChatRibbonInV6 .26s cubic-bezier(.22,1,.36,1) forwards !important;
+}
+
+@keyframes kxChatRibbonInV6 {
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-body-width: 78px;
+    --kx-ribbon-tab-height: 66px;
+    --kx-ribbon-peek: 20px;
+    --kx-ribbon-chat-gap: 18px;
+  }
+
+  .kx-action-ribbon {
+    min-height: 142px !important;
+    padding: 14px 10px 14px 16px !important;
+    border-radius: 24px 0 0 24px !important;
+  }
+
+  .kx-ribbon-buttons {
+    gap: 10px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 17px !important;
+  }
+
+  .kx-action-ribbon .kx-float-icon {
+    font-size: 1rem !important;
+  }
+
+  .kx-ribbon-toggle,
+  .kx-ribbon-toggle-inner {
+    width: 32px !important;
+    height: 66px !important;
+  }
+
+  .kx-action-ribbon .kx-float-label {
+    display: none !important;
+  }
+
+  .kx-chat-window {
+    left: max(10px, env(safe-area-inset-left)) !important;
+    right: calc(var(--kx-ribbon-body-width) + 8px) !important;
+    width: auto !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-body-width: 74px;
+    --kx-ribbon-peek: 18px;
+  }
+
+  .kx-action-ribbon {
+    padding-left: 15px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+  }
+
+  .kx-chat-window {
+    left: 8px !important;
+    right: calc(var(--kx-ribbon-body-width) + 6px) !important;
+  }
+
+  .kx-chat-title {
+    max-width: 150px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions,
+  .kx-ribbon-toggle-inner,
+  .kx-action-ribbon .kx-float-btn,
+  .kx-chat-window.open {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON COLLAPSED POSITION TWEAK
+   Moves the collapsed Call/Chat ribbon 5px further right.
+   ========================================================= */
+
+.kx-floating-actions {
+  --kx-ribbon-collapse-offset: 5px;
+}
+
+/* Default state is collapsed before auto/manual reveal */
+.kx-floating-actions {
+  transform: translate(calc(100% - var(--kx-ribbon-peek) + var(--kx-ribbon-collapse-offset)), -50%) !important;
+}
+
+/* Expanded/revealed state must remain fully visible */
+.kx-floating-actions.is-visible,
+.kx-floating-actions:focus-within {
+  transform: translate(0, -50%) !important;
+}
+
+/* Manual/auto collapsed state: move 5px right */
+.kx-floating-actions.is-collapsed {
+  transform: translate(calc(100% - var(--kx-ribbon-peek) + var(--kx-ribbon-collapse-offset)), -50%) !important;
 }

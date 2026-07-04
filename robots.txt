@@ -1,3 +1,18 @@
 User-agent: *
 Allow: /
-Sitemap: https://kairox.ai/sitemap.xml
+
+Sitemap: https://agentevo.online/sitemap.xml
+Host: agentevo.online
+
+# AI crawlers: allow public Kairox marketing content only.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /

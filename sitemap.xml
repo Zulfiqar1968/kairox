@@ -1,24 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://kairox.ai/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://kairox.ai/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/solutions.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/ai-employees.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/pricing.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/case-studies.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/blog.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/contact.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/real-estate.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/automotive.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/healthcare.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/retail.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/hospitality.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/professional-services.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/education.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/industries/sme-sectors.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/blog/ai-employees-uae.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/blog/ai-automation-uae.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/blog/whatsapp-ai-agents.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://kairox.ai/blog/business-automation-roi.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://agentevo.online/</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>Kairox AI Automation UAE | AI Employees for SMEs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/about.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/professional-services-ai.jpg</image:loc>
+      <image:title>About Kairox | UAE AI Automation Partner for SMEs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/ai-employees.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>AI Employees UAE | Digital Employees vs Traditional Hiring</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/blog.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>Kairox Knowledge Hub | AI Automation Insights for UAE SMEs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/blog/ai-automation-uae.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>AI Automation UAE Guide | Where SMEs Should Start First</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/blog/ai-employees-uae.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>What Are AI Employees? UAE SME Guide by Kairox</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/blog/business-automation-roi.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>Business Automation ROI UAE | Metrics SME Owners Should Track</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/blog/whatsapp-ai-agents.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>WhatsApp AI Agents UAE | Reduce Missed Leads for SMEs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/case-studies.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/professional-services-ai.jpg</image:loc>
+      <image:title>AI Automation Case Studies UAE | Kairox SME Use Cases</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/contact.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/professional-services-ai.jpg</image:loc>
+      <image:title>Contact Kairox UAE | Book AI Automation Consultation</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>Industry AI Automation UAE | Real Estate, Retail, Healthcare</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/automotive.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/automotive-ai.jpg</image:loc>
+      <image:title>Automotive AI Automation UAE | Kairox</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/education.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/education-ai.jpg</image:loc>
+      <image:title>Education AI Automation UAE | Admissions &amp; Parent Support</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/healthcare.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/healthcare-ai.jpg</image:loc>
+      <image:title>Healthcare AI Automation UAE | Clinic Appointment AI Agents</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/hospitality.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/hospitality-ai.jpg</image:loc>
+      <image:title>Hospitality AI Automation UAE | Guest Support &amp; Booking Agents</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/professional-services.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/professional-services-ai.jpg</image:loc>
+      <image:title>Professional Services AI Automation UAE | Client Intake Agents</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/real-estate.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/real-estate-ai.jpg</image:loc>
+      <image:title>Real Estate AI Automation UAE | Property Lead AI Agents</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/retail.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/retail-ai.jpg</image:loc>
+      <image:title>Retail AI Automation UAE | Customer Support &amp; Sales Agents</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/industries/sme-sectors.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>SME AI Automation UAE | Custom AI Workflows for Service Businesses</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/pricing.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>Kairox Pricing UAE | AI Employee Plans &amp; ROI Calculator</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://agentevo.online/solutions.html</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://agentevo.online/assets/img/industries/sme-sectors-ai.jpg</image:loc>
+      <image:title>AI Automation Solutions UAE | Sales, Support &amp; Workflow Agents</image:title>
+    </image:image>
+  </url>
 </urlset>
