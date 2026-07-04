@@ -11,9 +11,9 @@
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v4";
+  const historyKey = "kx_chat_history_v7";
   const versionKey = "kx_chat_widget_version";
-  const widgetVersion = "kairox-ribbon-actions-v4-manual-lock";
+  const widgetVersion = "kairox-ribbon-actions-v7-mobile-touch";
 
   let sessionId = localStorage.getItem(sessionKey);
   if (!sessionId) {
@@ -95,13 +95,13 @@
     actions.className = "kx-floating-actions is-collapsed";
     actions.setAttribute("aria-label", "Kairox quick actions");
     actions.innerHTML = `
+      <button class="kx-ribbon-toggle" type="button" aria-label="Expand quick actions" aria-expanded="false">
+        <span class="kx-ribbon-toggle-inner">
+          <i class="bi bi-chevron-left kx-toggle-expand" aria-hidden="true"></i>
+          <i class="bi bi-chevron-right kx-toggle-collapse" aria-hidden="true"></i>
+        </span>
+      </button>
       <div class="kx-action-ribbon">
-        <button class="kx-ribbon-toggle" type="button" aria-label="Expand quick actions" aria-expanded="false">
-          <span class="kx-ribbon-toggle-inner">
-            <i class="bi bi-chevron-left kx-toggle-expand" aria-hidden="true"></i>
-            <i class="bi bi-chevron-right kx-toggle-collapse" aria-hidden="true"></i>
-          </span>
-        </button>
         <div class="kx-ribbon-buttons">
           <a class="kx-float-btn kx-float-call" href="${escapeHtml(config.callUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Call Kairox voice agent">
             <span class="kx-float-icon"><i class="bi bi-telephone-outbound-fill"></i></span>
@@ -210,12 +210,30 @@
       collapseRibbon("manual");
     }
 
-    ribbonToggle.addEventListener("click", function () {
+    let lastRibbonToggleAt = 0;
+
+    function handleRibbonToggle(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      const now = Date.now();
+      if (now - lastRibbonToggleAt < 320) return;
+      lastRibbonToggleAt = now;
+
       if (state.isRibbonVisible) {
         collapseManually();
       } else {
         expandManually();
       }
+    }
+
+    ribbonToggle.addEventListener("pointerup", handleRibbonToggle);
+    ribbonToggle.addEventListener("click", handleRibbonToggle);
+    ribbonToggle.addEventListener("touchend", handleRibbonToggle, { passive: false });
+    ribbonToggle.addEventListener("pointerdown", function (event) {
+      event.stopPropagation();
     });
 
     let scrollTicking = false;
