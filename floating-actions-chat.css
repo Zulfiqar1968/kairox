@@ -1,0 +1,133 @@
+/* =====================================================
+   KAIROX CONTACT PAGE OVERLAP FIX
+   File: assets/css/contact-overlap-fix.css
+   Purpose: Prevent the footer / dark CTA section from covering
+   the Consultation flow card on contact.html.
+   ===================================================== */
+
+/* Keep the contact area in normal document flow and give it enough
+   breathing space before the next dark CTA section. */
+body.contact-page #consultation {
+  position: relative;
+  z-index: 2;
+  overflow: visible !important;
+  padding-bottom: clamp(5rem, 8vw, 8rem) !important;
+  margin-bottom: 0 !important;
+  isolation: isolate;
+}
+
+body.contact-page #consultation .container,
+body.contact-page #consultation .row,
+body.contact-page #consultation .col-lg-7,
+body.contact-page #consultation .contact-flow-column {
+  position: relative;
+  z-index: 2;
+}
+
+/* The right column has two stacked cards. This stops global equal-height
+   card rules from stretching them into the next section. */
+body.contact-page .contact-flow-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-self: flex-start;
+}
+
+body.contact-page .contact-flow-column > .kx-card {
+  height: auto !important;
+  min-height: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+  position: relative;
+  z-index: 3;
+}
+
+/* Keep the consultation-flow content inside its card. */
+body.contact-page .contact-flow-card {
+  padding-bottom: 1.75rem !important;
+}
+
+body.contact-page .contact-flow-card .process-step {
+  position: relative;
+  min-height: auto !important;
+  padding-left: 4.6rem !important;
+  padding-top: 0 !important;
+  margin-bottom: 1.4rem !important;
+  overflow: visible !important;
+  clear: both;
+}
+
+body.contact-page .contact-flow-card .process-step:last-child {
+  margin-bottom: 0 !important;
+}
+
+body.contact-page .contact-flow-card .process-number {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: 2;
+}
+
+/* Some global process styles draw a dashed vertical line with ::after.
+   If not controlled, that line can visually extend beyond the card. */
+body.contact-page .contact-flow-card .process-step::after {
+  top: 62px !important;
+  bottom: -0.7rem !important;
+  z-index: 0;
+}
+
+body.contact-page .contact-flow-card .process-step:last-child::after {
+  display: none !important;
+}
+
+/* Make sure the next dark CTA section and footer start below the full
+   contact section instead of visually sitting on top of it. */
+body.contact-page #consultation + .section-dark {
+  position: relative;
+  z-index: 1;
+  clear: both;
+  margin-top: 0 !important;
+}
+
+body.contact-page footer {
+  position: relative;
+  z-index: 0;
+  clear: both;
+  margin-top: 0 !important;
+}
+
+/* AOS animations can briefly create transforms; this prevents animated
+   columns from creating visual stacking issues on the contact page. */
+body.contact-page #consultation [data-aos] {
+  backface-visibility: hidden;
+}
+
+@media (max-width: 991.98px) {
+  body.contact-page #consultation {
+    padding-bottom: 5rem !important;
+  }
+
+  body.contact-page #consultation .row {
+    row-gap: 2rem;
+  }
+
+  body.contact-page .contact-flow-column {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.contact-page #consultation {
+    padding-bottom: 4.5rem !important;
+  }
+
+  body.contact-page .contact-flow-card .process-step {
+    padding-left: 3.8rem !important;
+    margin-bottom: 1.15rem !important;
+  }
+
+  body.contact-page .contact-flow-card .process-number {
+    width: 48px;
+    height: 48px;
+  }
+}
