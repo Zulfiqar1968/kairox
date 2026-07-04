@@ -4087,3 +4087,320 @@ footer,
     animation: none !important;
   }
 }
+
+/* =========================================================
+   KAIROX FINAL RIBBON ALIGNMENT FIX V8
+   Clean desktop/mobile alignment for ribbon, buttons, phone/chat icons.
+   ========================================================= */
+
+:root {
+  --kx-ribbon-tab-width: 36px;
+  --kx-ribbon-tab-height: 74px;
+  --kx-ribbon-body-width: 84px;
+  --kx-ribbon-gap: 14px;
+}
+
+html,
+body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: calc(var(--kx-ribbon-tab-width) + var(--kx-ribbon-body-width)) !important;
+  height: 156px !important;
+  z-index: 999998 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+  transition: transform .42s cubic-bezier(.22,1,.36,1) !important;
+  will-change: transform !important;
+}
+
+.kx-floating-actions.is-visible {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-floating-actions.is-collapsed,
+.kx-floating-actions.is-collapsed:focus-within {
+  transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+}
+
+.kx-ribbon-toggle {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  flex: 0 0 var(--kx-ribbon-tab-width) !important;
+  width: var(--kx-ribbon-tab-width) !important;
+  height: var(--kx-ribbon-tab-height) !important;
+  min-height: 0 !important;
+  margin: 0 -1px 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px 0 0 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  background: transparent !important;
+  z-index: 4 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle-inner {
+  width: var(--kx-ribbon-tab-width) !important;
+  height: var(--kx-ribbon-tab-height) !important;
+  border-radius: 999px 0 0 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #112E38 !important;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255,255,255,.38), transparent 40%),
+    linear-gradient(180deg, #F6E6A6 0%, #D5B052 62%, #AF842B 100%) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  border-right: 0 !important;
+  box-shadow: -6px 12px 30px rgba(4,30,43,.22), inset 0 1px 0 rgba(255,255,255,.40) !important;
+}
+
+.kx-ribbon-toggle i {
+  font-size: 1.08rem !important;
+  line-height: 1 !important;
+}
+
+.kx-ribbon-toggle .kx-toggle-collapse { display: none !important; }
+.kx-ribbon-toggle .kx-toggle-expand { display: inline-block !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-expand { display: none !important; }
+.kx-floating-actions.is-visible .kx-ribbon-toggle .kx-toggle-collapse { display: inline-block !important; }
+
+.kx-action-ribbon {
+  position: relative !important;
+  flex: 0 0 var(--kx-ribbon-body-width) !important;
+  width: var(--kx-ribbon-body-width) !important;
+  height: 156px !important;
+  min-height: 156px !important;
+  padding: 14px 12px 14px 14px !important;
+  margin: 0 !important;
+  border-radius: 24px 0 0 24px !important;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(230,200,115,.16), transparent 34%),
+    radial-gradient(circle at 92% 88%, rgba(15,118,110,.34), transparent 46%),
+    linear-gradient(160deg, rgba(3,26,35,.985) 0%, rgba(4,30,43,.985) 46%, rgba(11,93,95,.96) 100%) !important;
+  border: 1px solid rgba(230,200,115,.26) !important;
+  border-right: 0 !important;
+  box-shadow: -18px 26px 65px rgba(4,30,43,.28), inset 0 1px 0 rgba(255,255,255,.11) !important;
+  overflow: visible !important;
+}
+
+.kx-action-ribbon::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 8px 7px 8px 10px !important;
+  border-radius: 19px 0 0 19px !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  pointer-events: none !important;
+}
+
+.kx-ribbon-buttons {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  gap: 12px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  position: relative !important;
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  max-width: 52px !important;
+  flex: 0 0 52px !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 12px 28px rgba(4,30,43,.22), inset 0 1px 0 rgba(255,255,255,.14), 0 0 0 1px rgba(255,255,255,.08) !important;
+  transition: transform .22s ease, box-shadow .22s ease !important;
+  touch-action: manipulation !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  transform: translateX(-3px) scale(1.03) !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  color: #041E2B !important;
+  background: radial-gradient(circle at 26% 18%, rgba(255,255,255,.30), transparent 36%), linear-gradient(135deg, #F5E4A4 0%, #D8B45A 60%, #AE842C 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  color: #fff !important;
+  background: radial-gradient(circle at 26% 18%, rgba(255,255,255,.12), transparent 36%), linear-gradient(135deg, #0C6B67 0%, #0F766E 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-icon {
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.12rem !important;
+  line-height: 1 !important;
+}
+
+.kx-action-ribbon .kx-float-label {
+  position: absolute !important;
+  right: calc(100% + 12px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) translateX(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  white-space: nowrap !important;
+  padding: .42rem .7rem !important;
+  border-radius: 999px !important;
+  font-size: .74rem !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  background: rgba(3,26,35,.94) !important;
+  border: 1px solid rgba(230,200,115,.22) !important;
+  box-shadow: 0 10px 28px rgba(4,30,43,.18) !important;
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover .kx-float-label,
+.kx-action-ribbon .kx-float-btn:focus-visible .kx-float-label {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(0) !important;
+}
+
+.kx-chat-window {
+  right: calc(var(--kx-ribbon-tab-width) + var(--kx-ribbon-body-width) + var(--kx-ribbon-gap)) !important;
+  top: 50% !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: min(410px, calc(100vw - 160px)) !important;
+  height: min(650px, calc(100vh - 44px)) !important;
+  max-height: calc(100vh - 44px) !important;
+  transform: translateY(calc(-50% + 14px)) scale(.98) !important;
+  opacity: 0 !important;
+}
+
+.kx-chat-window.open {
+  animation: kxChatRibbonFinalIn .26s cubic-bezier(.22,1,.36,1) forwards !important;
+}
+
+@keyframes kxChatRibbonFinalIn {
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --kx-ribbon-tab-width: 34px;
+    --kx-ribbon-tab-height: 66px;
+    --kx-ribbon-body-width: 74px;
+    --kx-ribbon-gap: 6px;
+  }
+
+  .kx-floating-actions {
+    height: 142px !important;
+    transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+  }
+
+  .kx-floating-actions.is-visible {
+    transform: translate(0, -50%) !important;
+  }
+
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions.is-collapsed:focus-within {
+    transform: translate(var(--kx-ribbon-body-width), -50%) !important;
+  }
+
+  .kx-action-ribbon {
+    height: 142px !important;
+    min-height: 142px !important;
+    padding: 12px 10px 12px 14px !important;
+    border-radius: 22px 0 0 22px !important;
+  }
+
+  .kx-ribbon-buttons {
+    gap: 10px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    flex-basis: 46px !important;
+    border-radius: 16px !important;
+  }
+
+  .kx-action-ribbon .kx-float-icon {
+    font-size: 1rem !important;
+  }
+
+  .kx-action-ribbon .kx-float-label {
+    display: none !important;
+  }
+
+  .kx-chat-window {
+    left: 8px !important;
+    right: calc(var(--kx-ribbon-tab-width) + var(--kx-ribbon-body-width) + 6px) !important;
+    width: auto !important;
+    max-width: calc(100vw - var(--kx-ribbon-tab-width) - var(--kx-ribbon-body-width) - 14px) !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --kx-ribbon-tab-width: 32px;
+    --kx-ribbon-tab-height: 64px;
+    --kx-ribbon-body-width: 70px;
+  }
+
+  .kx-action-ribbon {
+    padding-left: 13px !important;
+  }
+
+  .kx-action-ribbon .kx-float-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    flex-basis: 44px !important;
+  }
+
+  .kx-chat-window {
+    left: 6px !important;
+    right: calc(var(--kx-ribbon-tab-width) + var(--kx-ribbon-body-width) + 5px) !important;
+  }
+}

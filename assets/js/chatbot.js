@@ -11,9 +11,9 @@
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v7";
+  const historyKey = "kx_chat_history_v8";
   const versionKey = "kx_chat_widget_version";
-  const widgetVersion = "kairox-ribbon-actions-v7-mobile-touch";
+  const widgetVersion = "kairox-ribbon-final-alignment-v8";
 
   let sessionId = localStorage.getItem(sessionKey);
   if (!sessionId) {
@@ -28,6 +28,8 @@
     isRibbonVisible: false,
     manualMode: false,
     hideTimer: null,
+    lastToggleAt: 0,
+    lastChatAt: 0,
     history: safeParse(localStorage.getItem(historyKey), [])
   };
 
@@ -63,7 +65,6 @@
   function extractReply(data) {
     if (!data) return "";
     if (typeof data === "string") return data.trim();
-
     if (Array.isArray(data)) {
       for (const item of data) {
         const found = extractReply(item);
@@ -71,12 +72,10 @@
       }
       return "";
     }
-
     const keys = ["output", "reply", "message", "answer", "response", "text", "content", "result"];
     for (const key of keys) {
       if (typeof data[key] === "string" && data[key].trim()) return data[key].trim();
     }
-
     const wrappers = ["json", "body", "data", "payload"];
     for (const wrapper of wrappers) {
       if (data[wrapper]) {
@@ -84,8 +83,25 @@
         if (found) return found;
       }
     }
-
     return "";
+  }
+
+  function bindPress(element, handler) {
+    let last = 0;
+    function run(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const now = Date.now();
+      if (now - last < 350) return;
+      last = now;
+      handler(event);
+    }
+    element.addEventListener("pointerup", run);
+    element.addEventListener("touchend", run, { passive: false });
+    element.addEventListener("click", run);
+    element.addEventListener("pointerdown", function (event) { event.stopPropagation(); });
   }
 
   function buildWidget() {
@@ -162,8 +178,8 @@
     document.body.appendChild(actions);
     document.body.appendChild(panel);
 
-    const chatButton = actions.querySelector(".kx-float-chat");
     const ribbonToggle = actions.querySelector(".kx-ribbon-toggle");
+    const chatButton = actions.querySelector(".kx-float-chat");
     const closeButton = panel.querySelector(".kx-chat-close");
     const clearButton = panel.querySelector(".kx-chat-clear");
     const messages = panel.querySelector(".kx-chat-messages");
@@ -201,40 +217,16 @@
       syncRibbon();
     }
 
-    function expandManually() {
-      revealRibbon("manual");
-    }
-
-    function collapseManually() {
-      if (state.isOpen) closePanel({ preserveManual: true });
-      collapseRibbon("manual");
-    }
-
-    let lastRibbonToggleAt = 0;
-
-    function handleRibbonToggle(event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      const now = Date.now();
-      if (now - lastRibbonToggleAt < 320) return;
-      lastRibbonToggleAt = now;
-
+    function toggleRibbon() {
       if (state.isRibbonVisible) {
-        collapseManually();
+        if (state.isOpen) closePanel({ preserveManual: true });
+        collapseRibbon("manual");
       } else {
-        expandManually();
+        revealRibbon("manual");
       }
     }
 
-    ribbonToggle.addEventListener("pointerup", handleRibbonToggle);
-    ribbonToggle.addEventListener("click", handleRibbonToggle);
-    ribbonToggle.addEventListener("touchend", handleRibbonToggle, { passive: false });
-    ribbonToggle.addEventListener("pointerdown", function (event) {
-      event.stopPropagation();
-    });
+    bindPress(ribbonToggle, toggleRibbon);
 
     let scrollTicking = false;
     function handleScrollActivity() {
@@ -255,6 +247,7 @@
     function openPanel() {
       state.isOpen = true;
       state.isRibbonVisible = true;
+      clearTimeout(state.hideTimer);
       syncRibbon();
       panel.classList.add("open");
       chatButton.classList.add("active");
@@ -276,7 +269,7 @@
       state.isOpen ? closePanel() : openPanel();
     }
 
-    chatButton.addEventListener("click", togglePanel);
+    bindPress(chatButton, togglePanel);
     closeButton.addEventListener("click", () => closePanel());
 
     clearButton.addEventListener("click", function () {
@@ -339,9 +332,7 @@
     }
 
     function scrollBottom() {
-      requestAnimationFrame(() => {
-        messages.scrollTop = messages.scrollHeight;
-      });
+      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
     }
 
     function renderHistory(forceWelcome = false) {
@@ -368,17 +359,12 @@
         const response = await fetch(config.webhook, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text,
-            sessionId,
-            page: window.location.href,
-            source: "kairox_website_chat"
-          })
+          body: JSON.stringify({ message: text, sessionId, page: window.location.href, source: "kairox_website_chat" })
         });
 
         const raw = await response.text();
         let data = raw;
-        try { data = JSON.parse(raw); } catch { /* plain-text response */ }
+        try { data = JSON.parse(raw); } catch { }
 
         const reply = extractReply(data) || "Thank you. I could not read the automation response clearly. You can continue here, call the Kairox voice agent, or book a consultation.";
         typing.remove();
