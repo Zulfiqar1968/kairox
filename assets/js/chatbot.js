@@ -1,44 +1,39 @@
 (function () {
   "use strict";
+  console.log("[Kairox] chatbot loaded: v19 json-webhook");
 
   const defaults = {
     brand: "Kairox AI Assistant",
-    webhook: "https://molly-preestival-irina.ngrok-free.app/webhook/f7b6e59a-4498-491d-baaf-f6652f66d59a/chat",
+    webhook: "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/leads",
     callUrl: "https://retellai.com/kairox",
     chatUrl: "https://n8n.com/kairox",
-    logo: "assets/img/kairox-logo.svg"
+    logo: "assets/img/kairox-mark.svg"
   };
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v13";
-  const versionKey = "kx_chat_widget_version";
-  const widgetVersion = "kairox-ribbon-mobile-inline-v13";
+  const historyKey = "kx_chat_history_v19";
 
   let sessionId = localStorage.getItem(sessionKey);
   if (!sessionId) {
     sessionId = "kx_" + Math.random().toString(36).slice(2, 10) + "_" + Date.now();
     localStorage.setItem(sessionKey, sessionId);
   }
-  localStorage.setItem(versionKey, widgetVersion);
 
   const state = {
+    isRibbonVisible: false,
     isOpen: false,
     isSending: false,
-    isRibbonVisible: false,
-    manualMode: false,
     hideTimer: null,
-    lastToggleAt: 0,
-    lastChatAt: 0,
     history: safeParse(localStorage.getItem(historyKey), [])
   };
 
-  function isMobileRibbonViewport() {
-    return window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches;
-  }
-
   function safeParse(value, fallback) {
     try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
+  }
+
+  function isMobile() {
+    return window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches;
   }
 
   function escapeHtml(text) {
@@ -54,7 +49,7 @@
     let html = escapeHtml(text || "");
     html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     html = html.replace(/\n/g, "<br>");
-    html = html.replace(/(https?:\/\/[^\s<]+)/g, "<a href=\"$1\" target=\"_blank\" rel=\"noopener noreferrer\">$1</a>");
+    html = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
     return html;
   }
 
@@ -76,10 +71,12 @@
       }
       return "";
     }
+
     const keys = ["output", "reply", "message", "answer", "response", "text", "content", "result"];
     for (const key of keys) {
       if (typeof data[key] === "string" && data[key].trim()) return data[key].trim();
     }
+
     const wrappers = ["json", "body", "data", "payload"];
     for (const wrapper of wrappers) {
       if (data[wrapper]) {
@@ -90,26 +87,8 @@
     return "";
   }
 
-  function bindPress(element, handler) {
-    let last = 0;
-    function run(event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      const now = Date.now();
-      if (now - last < 350) return;
-      last = now;
-      handler(event);
-    }
-    element.addEventListener("pointerup", run);
-    element.addEventListener("touchend", run, { passive: false });
-    element.addEventListener("click", run);
-    element.addEventListener("pointerdown", function (event) { event.stopPropagation(); });
-  }
-
   function buildWidget() {
-    if (document.querySelector(".kx-floating-actions")) return;
+    document.querySelectorAll(".kx-floating-actions, .kx-chat-window").forEach((el) => el.remove());
 
     const actions = document.createElement("div");
     actions.className = "kx-floating-actions is-collapsed";
@@ -139,13 +118,14 @@
     panel.className = "kx-chat-window";
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-label", "Kairox AI chat assistant");
+    panel.setAttribute("aria-hidden", "true");
     panel.innerHTML = `
       <div class="kx-chat-header">
         <div class="kx-chat-brand">
-          <div class="kx-chat-avatar"><img src="${escapeHtml(config.logo)}" alt=""></div>
+          <div class="kx-chat-avatar"><img src="${escapeHtml(config.logo1)}" alt=""></div>
           <div>
             <div class="kx-chat-title">${escapeHtml(config.brand)}</div>
-            <div class="kx-chat-status"><span></span> Online AI advisor</div>
+            <div class="kx-chat-status"><span></span> Zara - Online advisor</div>
           </div>
         </div>
         <div class="kx-chat-header-actions">
@@ -155,20 +135,12 @@
         </div>
       </div>
 
-      <div class="kx-chat-body">
-        <div class="kx-chat-intro">
-          <span class="kx-chat-intro-badge">KAIROX AI</span>
-          <strong>How can we help your business automate today?</strong>
-          <p>Ask about AI employees, pricing, appointments, support agents or workflow automation.</p>
-        </div>
-        <div class="kx-chat-messages" aria-live="polite"></div>
-      </div>
+      <div class="kx-chat-messages" aria-live="polite"></div>
 
       <div class="kx-chat-quick">
-        <button type="button" data-kx-question="What does Kairox do?">What do you do?</button>
-        <button type="button" data-kx-question="How much does it cost?">Pricing</button>
+        <button type="button" data-kx-question="What AI automation services does Kairox offer?">Services</button>
+        <button type="button" data-kx-question="How much does Kairox AI automation cost?">Pricing</button>
         <button type="button" data-kx-question="Can I book a consultation?">Book consultation</button>
-        <a href="${escapeHtml(config.chatUrl)}" target="_blank" rel="noopener noreferrer">Open agent <i class="bi bi-box-arrow-up-right"></i></a>
       </div>
 
       <div class="kx-chat-typing-note" aria-live="polite"></div>
@@ -182,7 +154,7 @@
     document.body.appendChild(actions);
     document.body.appendChild(panel);
 
-    const ribbonToggle = actions.querySelector(".kx-ribbon-toggle");
+    const toggleButton = actions.querySelector(".kx-ribbon-toggle");
     const chatButton = actions.querySelector(".kx-float-chat");
     const closeButton = panel.querySelector(".kx-chat-close");
     const clearButton = panel.querySelector(".kx-chat-clear");
@@ -191,39 +163,15 @@
     const input = panel.querySelector(".kx-chat-input-field");
     const typingNote = panel.querySelector(".kx-chat-typing-note");
 
-
-    function forceMobileRibbonPosition() {
-      if (!actions || !ribbonToggle) return;
-
-      const isMobile = isMobileRibbonViewport();
-      const actionRibbon = actions.querySelector(".kx-action-ribbon");
-
-      if (!isMobile) {
+    function applyMobileLayout() {
+      if (!isMobile()) {
+        actions.style.removeProperty("transform");
         actions.style.removeProperty("width");
         actions.style.removeProperty("height");
         actions.style.removeProperty("max-width");
         actions.style.removeProperty("max-height");
-        actions.style.removeProperty("transform");
         actions.style.removeProperty("right");
         actions.style.removeProperty("top");
-
-        ribbonToggle.style.removeProperty("position");
-        ribbonToggle.style.removeProperty("left");
-        ribbonToggle.style.removeProperty("top");
-        ribbonToggle.style.removeProperty("transform");
-        ribbonToggle.style.removeProperty("width");
-        ribbonToggle.style.removeProperty("height");
-        ribbonToggle.style.removeProperty("z-index");
-
-        if (actionRibbon) {
-          actionRibbon.style.removeProperty("opacity");
-          actionRibbon.style.removeProperty("visibility");
-          actionRibbon.style.removeProperty("pointer-events");
-          actionRibbon.style.removeProperty("width");
-          actionRibbon.style.removeProperty("height");
-          actionRibbon.style.removeProperty("right");
-          actionRibbon.style.removeProperty("top");
-        }
         return;
       }
 
@@ -232,164 +180,143 @@
       const bodyHeight = narrow ? 140 : 142;
       const tabWidth = narrow ? 32 : 34;
       const tabHeight = narrow ? 64 : 66;
+      const ribbon = actions.querySelector(".kx-action-ribbon");
 
       actions.style.setProperty("position", "fixed", "important");
       actions.style.setProperty("top", "50%", "important");
       actions.style.setProperty("right", "0", "important");
       actions.style.setProperty("left", "auto", "important");
-      actions.style.setProperty("bottom", "auto", "important");
       actions.style.setProperty("width", bodyWidth + "px", "important");
       actions.style.setProperty("max-width", bodyWidth + "px", "important");
       actions.style.setProperty("height", bodyHeight + "px", "important");
       actions.style.setProperty("max-height", bodyHeight + "px", "important");
       actions.style.setProperty("overflow", "visible", "important");
-      actions.style.setProperty(
-        "transform",
-        state.isRibbonVisible ? "translate(0, -50%)" : "translate(" + bodyWidth + "px, -50%)",
-        "important"
-      );
+      actions.style.setProperty("transform", state.isRibbonVisible ? "translate(0, -50%)" : "translate(" + bodyWidth + "px, -50%)", "important");
 
-      ribbonToggle.style.setProperty("position", "absolute", "important");
-      ribbonToggle.style.setProperty("top", "50%", "important");
-      ribbonToggle.style.setProperty("left", (-tabWidth + 1) + "px", "important");
-      ribbonToggle.style.setProperty("right", "auto", "important");
-      ribbonToggle.style.setProperty("bottom", "auto", "important");
-      ribbonToggle.style.setProperty("transform", "translateY(-50%)", "important");
-      ribbonToggle.style.setProperty("width", tabWidth + "px", "important");
-      ribbonToggle.style.setProperty("min-width", tabWidth + "px", "important");
-      ribbonToggle.style.setProperty("max-width", tabWidth + "px", "important");
-      ribbonToggle.style.setProperty("height", tabHeight + "px", "important");
-      ribbonToggle.style.setProperty("min-height", tabHeight + "px", "important");
-      ribbonToggle.style.setProperty("max-height", tabHeight + "px", "important");
-      ribbonToggle.style.setProperty("z-index", "1000000", "important");
+      toggleButton.style.setProperty("position", "absolute", "important");
+      toggleButton.style.setProperty("top", "50%", "important");
+      toggleButton.style.setProperty("left", (-tabWidth + 1) + "px", "important");
+      toggleButton.style.setProperty("transform", "translateY(-50%)", "important");
+      toggleButton.style.setProperty("width", tabWidth + "px", "important");
+      toggleButton.style.setProperty("height", tabHeight + "px", "important");
+      toggleButton.style.setProperty("z-index", "1000000", "important");
 
-      const toggleInner = ribbonToggle.querySelector(".kx-ribbon-toggle-inner");
-      if (toggleInner) {
-        toggleInner.style.setProperty("width", tabWidth + "px", "important");
-        toggleInner.style.setProperty("height", tabHeight + "px", "important");
-        toggleInner.style.setProperty("min-width", tabWidth + "px", "important");
-        toggleInner.style.setProperty("min-height", tabHeight + "px", "important");
-        toggleInner.style.setProperty("max-width", tabWidth + "px", "important");
-        toggleInner.style.setProperty("max-height", tabHeight + "px", "important");
-        toggleInner.style.setProperty("transform", "none", "important");
+      const inner = toggleButton.querySelector(".kx-ribbon-toggle-inner");
+      if (inner) {
+        inner.style.setProperty("width", tabWidth + "px", "important");
+        inner.style.setProperty("height", tabHeight + "px", "important");
+        inner.style.setProperty("transform", "none", "important");
       }
 
-      if (actionRibbon) {
-        actionRibbon.style.setProperty("position", "absolute", "important");
-        actionRibbon.style.setProperty("top", "0", "important");
-        actionRibbon.style.setProperty("right", "0", "important");
-        actionRibbon.style.setProperty("left", "auto", "important");
-        actionRibbon.style.setProperty("width", bodyWidth + "px", "important");
-        actionRibbon.style.setProperty("max-width", bodyWidth + "px", "important");
-        actionRibbon.style.setProperty("height", bodyHeight + "px", "important");
-        actionRibbon.style.setProperty("min-height", bodyHeight + "px", "important");
-        actionRibbon.style.setProperty("max-height", bodyHeight + "px", "important");
-
-        if (state.isRibbonVisible) {
-          actionRibbon.style.setProperty("opacity", "1", "important");
-          actionRibbon.style.setProperty("visibility", "visible", "important");
-          actionRibbon.style.setProperty("pointer-events", "auto", "important");
-        } else {
-          actionRibbon.style.setProperty("opacity", "0", "important");
-          actionRibbon.style.setProperty("visibility", "hidden", "important");
-          actionRibbon.style.setProperty("pointer-events", "none", "important");
-        }
+      if (ribbon) {
+        ribbon.style.setProperty("position", "absolute", "important");
+        ribbon.style.setProperty("top", "0", "important");
+        ribbon.style.setProperty("right", "0", "important");
+        ribbon.style.setProperty("width", bodyWidth + "px", "important");
+        ribbon.style.setProperty("height", bodyHeight + "px", "important");
+        ribbon.style.setProperty("max-width", bodyWidth + "px", "important");
+        ribbon.style.setProperty("max-height", bodyHeight + "px", "important");
+        ribbon.style.setProperty("opacity", state.isRibbonVisible ? "1" : "0", "important");
+        ribbon.style.setProperty("visibility", state.isRibbonVisible ? "visible" : "hidden", "important");
+        ribbon.style.setProperty("pointer-events", state.isRibbonVisible ? "auto" : "none", "important");
       }
     }
 
     function syncRibbon() {
       actions.classList.toggle("is-visible", state.isRibbonVisible);
       actions.classList.toggle("is-collapsed", !state.isRibbonVisible);
-      actions.classList.toggle("is-manual-mode", state.manualMode);
-      ribbonToggle.setAttribute("aria-expanded", String(state.isRibbonVisible));
-      ribbonToggle.setAttribute("aria-label", state.isRibbonVisible ? "Collapse quick actions" : "Expand quick actions");
-      ribbonToggle.setAttribute("title", state.isRibbonVisible ? "Collapse" : "Expand");
-      forceMobileRibbonPosition();
+      toggleButton.setAttribute("aria-expanded", String(state.isRibbonVisible));
+      toggleButton.setAttribute("aria-label", state.isRibbonVisible ? "Collapse quick actions" : "Expand quick actions");
+      applyMobileLayout();
     }
 
-    function revealRibbon(source) {
+    function expandRibbon() {
       state.isRibbonVisible = true;
       clearTimeout(state.hideTimer);
-      if (source === "manual") {
-        state.manualMode = true;
-      } else if (!state.manualMode) {
-        state.hideTimer = setTimeout(() => {
-          if (!state.isOpen && !state.manualMode) collapseRibbon("auto");
-        }, 60000);
-      }
       syncRibbon();
     }
 
-    function collapseRibbon(source) {
-      if (state.isOpen && source !== "manual") return;
-      if (source === "manual") state.manualMode = true;
+    function collapseRibbon() {
+      if (state.isOpen) closePanel();
       state.isRibbonVisible = false;
       clearTimeout(state.hideTimer);
       syncRibbon();
     }
 
-    function toggleRibbon() {
-      if (state.isRibbonVisible) {
-        if (state.isOpen) closePanel({ preserveManual: true });
-        collapseRibbon("manual");
-      } else {
-        revealRibbon("manual");
+    function toggleRibbon(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
       }
+      state.isRibbonVisible ? collapseRibbon() : expandRibbon();
     }
 
-    bindPress(ribbonToggle, toggleRibbon);
-
-    let scrollTicking = false;
-    function handleScrollActivity() {
-      
-      
-      if (isMobileRibbonViewport()) return;
-if (isMobileRibbonViewport()) return;
-if (state.manualMode) return;
-      if (!scrollTicking) {
-        window.requestAnimationFrame(() => {
-          revealRibbon("auto");
-          scrollTicking = false;
-        });
-        scrollTicking = true;
+    function openPanel(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
       }
-    }
 
-    window.addEventListener("scroll", handleScrollActivity, { passive: true });
-    window.addEventListener("wheel", handleScrollActivity, { passive: true });
-    window.addEventListener("touchmove", handleScrollActivity, { passive: true });
-    window.addEventListener("resize", forceMobileRibbonPosition, { passive: true });
-    window.addEventListener("orientationchange", function () {
-      setTimeout(forceMobileRibbonPosition, 250);
-    });
-
-    function openPanel() {
       state.isOpen = true;
       state.isRibbonVisible = true;
       clearTimeout(state.hideTimer);
       syncRibbon();
+
       panel.classList.add("open");
+      panel.setAttribute("aria-hidden", "false");
+      panel.style.setProperty("display", "flex", "important");
+      panel.style.setProperty("visibility", "visible", "important");
+      panel.style.setProperty("opacity", "1", "important");
+      panel.style.setProperty("pointer-events", "auto", "important");
+      panel.style.setProperty("z-index", "1000001", "important");
+
       chatButton.classList.add("active");
       renderHistory();
-      setTimeout(() => input.focus(), 80);
+      setTimeout(() => {
+        try { input.focus({ preventScroll: true }); } catch { input.focus(); }
+      }, 80);
     }
 
-    function closePanel(options = {}) {
+    function closePanel(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
       state.isOpen = false;
       panel.classList.remove("open");
+      panel.setAttribute("aria-hidden", "true");
+      panel.style.removeProperty("display");
+      panel.style.removeProperty("visibility");
+      panel.style.removeProperty("opacity");
+      panel.style.removeProperty("pointer-events");
       chatButton.classList.remove("active");
-      if (!options.preserveManual && !state.manualMode) {
-        clearTimeout(state.hideTimer);
-        state.hideTimer = setTimeout(() => collapseRibbon("auto"), 60000);
-      }
+      applyMobileLayout();
     }
 
-    function togglePanel() {
-      state.isOpen ? closePanel() : openPanel();
+    function bindOpenButton(element, handler) {
+      let last = 0;
+      const run = function (event) {
+        const now = Date.now();
+        if (now - last < 350) return;
+        last = now;
+        handler(event);
+      };
+
+      element.onclick = run;
+      element.ontouchend = run;
+      element.onpointerup = run;
+      element.addEventListener("click", run, true);
+      element.addEventListener("touchend", run, { passive: false, capture: true });
+      element.addEventListener("pointerup", run, true);
     }
 
-    bindPress(chatButton, togglePanel);
-    closeButton.addEventListener("click", () => closePanel());
+    bindOpenButton(toggleButton, toggleRibbon);
+    bindOpenButton(chatButton, openPanel);
+    closeButton.addEventListener("click", closePanel);
+    closeButton.addEventListener("touchend", closePanel, { passive: false });
 
     clearButton.addEventListener("click", function () {
       state.history = [];
@@ -416,94 +343,128 @@ if (state.manualMode) return;
       sendMessage(input.value);
     });
 
-    function addMessage(text, type, persist = true) {
-      const msg = document.createElement("div");
-      msg.className = "kx-chat-msg " + (type === "user" ? "user" : "bot");
+    window.addEventListener("resize", applyMobileLayout, { passive: true });
+    window.addEventListener("orientationchange", function () {
+      setTimeout(applyMobileLayout, 250);
+    });
 
-      const bubble = document.createElement("div");
-      bubble.className = "kx-chat-bubble";
-      bubble.innerHTML = type === "user" ? escapeHtml(text) : richText(text);
-
-      const meta = document.createElement("div");
-      meta.className = "kx-chat-meta";
-      meta.textContent = type === "user" ? "You • " + nowTime() : "Kairox • " + nowTime();
-
-      msg.appendChild(bubble);
-      msg.appendChild(meta);
-      messages.appendChild(msg);
-
-      if (persist) {
-        state.history.push({ type, text });
-        saveHistory();
-      }
-
-      scrollBottom();
-      return msg;
-    }
-
-    function showTyping() {
-      const typing = document.createElement("div");
-      typing.className = "kx-chat-msg bot kx-chat-typing";
-      typing.innerHTML = `<div class="kx-chat-bubble"><span></span><span></span><span></span></div>`;
-      messages.appendChild(typing);
-      scrollBottom();
-      return typing;
-    }
-
-    function scrollBottom() {
-      requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
-    }
-
-    function renderHistory(forceWelcome = false) {
+    function renderHistory(forceGreeting = false) {
       messages.innerHTML = "";
-      if (!state.history.length || forceWelcome) {
-        addMessage("Hello! I’m the Kairox AI Advisor. I can help you explore AI employees, pricing, appointments, sales automation, support automation and workflow optimization.", "bot", false);
+      if (!state.history.length || forceGreeting) {
+        addMessage("assistant", "Hi, I’m Kairox AI Assistant. I can help with AI agents, workflow automation, pricing, consultations and UAE SME automation use cases.");
       } else {
-        state.history.forEach((item) => addMessage(item.text, item.type, false));
+        state.history.forEach((item) => appendMessage(item.role, item.text, item.time));
       }
-      scrollBottom();
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function appendMessage(role, text, time) {
+      const msg = document.createElement("div");
+      msg.className = "kx-chat-msg " + (role === "user" ? "user" : "assistant");
+      msg.innerHTML = `<div>${richText(text)}</div><span>${escapeHtml(time || nowTime())}</span>`;
+      messages.appendChild(msg);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addMessage(role, text) {
+      const entry = { role, text, time: nowTime() };
+      state.history.push(entry);
+      saveHistory();
+      appendMessage(role, text, entry.time);
+    }
+
+    function setSending(value) {
+      state.isSending = value;
+      form.querySelector("button").disabled = value;
+      input.disabled = value;
+      typingNote.textContent = value ? "Kairox is thinking..." : "";
+    }
+
+
+
+    async function postToWebhook(text) {
+      const payload = {
+        message: text,
+        chatInput: text,
+        text: text,
+        sessionId,
+        page: window.location.href,
+        source: "kairox_website_chat",
+        channel: "website_chat",
+        submittedAt: new Date().toISOString()
+      };
+
+      const response = await fetch(config.webhook, {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        redirect: "follow",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json, text/plain, */*"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      let data = "";
+
+      if (contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const raw = await response.text();
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          data = raw;
+        }
+      }
+
+      // n8n sometimes returns useful JSON with a non-2xx status during testing.
+      // Only throw if no readable payload exists.
+      if (!response.ok && !extractReply(data)) {
+        throw new Error("Webhook HTTP " + response.status + ": " + (typeof data === "string" ? data.slice(0, 180) : JSON.stringify(data).slice(0, 180)));
+      }
+
+      return data;
     }
 
     async function sendMessage(value) {
       const text = String(value || "").trim();
       if (!text || state.isSending) return;
 
-      state.isSending = true;
       input.value = "";
       typingNote.textContent = "";
-      addMessage(text, "user");
-      const typing = showTyping();
+      addMessage("user", text);
+      setSending(true);
 
       try {
-        const response = await fetch(config.webhook, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, sessionId, page: window.location.href, source: "kairox_website_chat" })
-        });
-
-        const raw = await response.text();
-        let data = raw;
-        try { data = JSON.parse(raw); } catch { }
-
-        const reply = extractReply(data) || "Thank you. I could not read the automation response clearly. You can continue here, call the Kairox voice agent, or book a consultation.";
-        typing.remove();
-        addMessage(reply, "bot");
+        const payload = await postToWebhook(text);
+        const reply = extractReply(payload) || "Thanks. I received your message. Please share your business type, team size and the process you want to automate so I can guide you better.";
+        addMessage("assistant", reply);
       } catch (error) {
-        console.error("[Kairox Chat] Connection error:", error);
-        typing.remove();
-        addMessage(`Connection issue. Please try again, or use the voice agent here: ${config.callUrl}`, "bot");
+        console.error("[Kairox] chat webhook connection error", error);
+        addMessage("assistant", "I could not load the live AI reply from the webhook. Please check the browser console for the exact webhook error, or use the Open agent link while this connection is finalised.");
       } finally {
-        state.isSending = false;
+        setSending(false);
         input.focus();
       }
     }
+
+    window.KairoxChatWidget = {
+      open: openPanel,
+      close: closePanel,
+      toggleRibbon,
+      expandRibbon,
+      collapseRibbon
+    };
 
     renderHistory();
     syncRibbon();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", buildWidget);
+    document.addEventListener("DOMContentLoaded", buildWidget, { once: true });
   } else {
     buildWidget();
   }

@@ -718,3 +718,146 @@
     --kx-ribbon-body-height: 140px;
   }
 }
+
+/* =========================================================
+   KAIROX CHAT BUTTON CLICK FIX V14
+   Ensures the Chat icon receives touch/click events reliably.
+   ========================================================= */
+
+.kx-action-ribbon,
+.kx-ribbon-buttons,
+.kx-action-ribbon .kx-float-btn,
+.kx-action-ribbon .kx-float-chat,
+.kx-action-ribbon .kx-float-call {
+  pointer-events: auto !important;
+}
+
+.kx-ribbon-buttons {
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  position: relative !important;
+  z-index: 30 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.kx-action-ribbon::before,
+.kx-action-ribbon::after {
+  pointer-events: none !important;
+}
+
+.kx-chat-window.open {
+  display: flex !important;
+}
+
+/* =========================================================
+   KAIROX CHAT WINDOW FINAL OPEN FIX V15
+   Prevents double-toggle issues and ensures the chat panel appears.
+   ========================================================= */
+
+.kx-action-ribbon .kx-float-chat {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  z-index: 50 !important;
+}
+
+.kx-chat-window.open {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 999997 !important;
+}
+
+/* On mobile, keep chat window inside screen when opened from the ribbon. */
+@media (max-width: 767.98px) {
+  .kx-chat-window.open {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* =========================================================
+   KAIROX CHAT STABLE V16
+   Clean final support for the rebuilt chatbot script.
+   ========================================================= */
+
+.kx-floating-actions,
+.kx-floating-actions *,
+.kx-action-ribbon,
+.kx-action-ribbon *,
+.kx-ribbon-toggle,
+.kx-ribbon-toggle *,
+.kx-float-chat,
+.kx-float-call {
+  pointer-events: auto !important;
+}
+
+.kx-action-ribbon::before,
+.kx-action-ribbon::after {
+  pointer-events: none !important;
+}
+
+.kx-float-chat {
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.kx-chat-window {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.kx-chat-window.open {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 1000001 !important;
+}
+
+.kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:active .kx-ribbon-toggle-inner,
+.kx-float-chat,
+.kx-float-chat:hover,
+.kx-float-chat:focus-visible,
+.kx-float-chat:active {
+  transform: none !important;
+}
+
+@media (max-width: 767.98px) {
+  .kx-chat-window.open {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    left: 8px !important;
+    right: 116px !important;
+    width: auto !important;
+    max-width: calc(100vw - 124px) !important;
+    top: 50% !important;
+    bottom: auto !important;
+    height: min(620px, calc(100vh - 42px)) !important;
+    max-height: calc(100vh - 42px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .kx-chat-window.open {
+    left: 6px !important;
+    right: 108px !important;
+    max-width: calc(100vw - 114px) !important;
+  }
+}
