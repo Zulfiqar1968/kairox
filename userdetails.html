@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lead Form</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      padding: 40px;
+    }
+
+    .form-container {
+      background: white;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="form-container">
+  <h2>Lead Form</h2>
+
+  <input type="text" id="name" placeholder="Name" required />
+  <input type="text" id="phone" placeholder="Phone" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="text" id="company" placeholder="Company" />
+
+  <select id="intent">
+    <option value="cold">Cold</option>
+    <option value="warm">Warm</option>
+    <option value="hot">Hot</option>
+    <option value="ready">Ready to Buy</option>
+  </select>
+
+  <button onclick="submitForm()">Submit</button>
+
+  <div id="msg" class="success"></div>
+</div>
+
+<script>
+async function submitForm() {
+  const data = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    email: document.getElementById("email").value,
+    company: document.getElementById("company").value,
+    intent: document.getElementById("intent").value,
+    sessionId: Date.now().toString()
+  };
+
+  try {
+    const response = await fetch("YOUR_N8N_WEBHOOK_URL", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      document.getElementById("msg").innerText = "Lead submitted successfully!";
+    } else {
+      document.getElementById("msg").innerText = "Error submitting lead.";
+    }
+
+  } catch (error) {
+    document.getElementById("msg").innerText = "Network error.";
+  }
+}
+</script>
+
+</body>
+</html>
