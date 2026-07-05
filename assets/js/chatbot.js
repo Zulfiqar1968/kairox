@@ -1,18 +1,18 @@
 (function () {
   "use strict";
-  console.log("[Kairox] chatbot loaded: v19 json-webhook");
+  console.log("[Kairox] chatbot loaded: v27 js-animated-typing");
 
   const defaults = {
     brand: "Kairox AI Assistant",
     webhook: "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/leads",
     callUrl: "https://retellai.com/kairox",
     chatUrl: "https://n8n.com/kairox",
-    logo: "assets/img/kairox-mark.svg"
+    logo: "assets/img/kairox-logo.svg"
   };
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v19";
+  const historyKey = "kx_chat_history_v27";
 
   let sessionId = localStorage.getItem(sessionKey);
   if (!sessionId) {
@@ -122,10 +122,10 @@
     panel.innerHTML = `
       <div class="kx-chat-header">
         <div class="kx-chat-brand">
-          <div class="kx-chat-avatar"><img src="${escapeHtml(config.logo1)}" alt=""></div>
+          <div class="kx-chat-avatar"><img src="${escapeHtml(config.logo)}" alt=""></div>
           <div>
             <div class="kx-chat-title">${escapeHtml(config.brand)}</div>
-            <div class="kx-chat-status"><span></span> Zara - Online advisor</div>
+            <div class="kx-chat-status"><span></span> Online AI advisor</div>
           </div>
         </div>
         <div class="kx-chat-header-actions">
@@ -141,6 +141,7 @@
         <button type="button" data-kx-question="What AI automation services does Kairox offer?">Services</button>
         <button type="button" data-kx-question="How much does Kairox AI automation cost?">Pricing</button>
         <button type="button" data-kx-question="Can I book a consultation?">Book consultation</button>
+        <a href="${escapeHtml(config.chatUrl)}" target="_blank" rel="noopener noreferrer">Open agent <i class="bi bi-box-arrow-up-right"></i></a>
       </div>
 
       <div class="kx-chat-typing-note" aria-live="polite"></div>
@@ -366,6 +367,163 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
+    function showTypingIndicator() {
+      removeTypingIndicator();
+
+      const typing = document.createElement("div");
+      typing.className = "kx-chat-msg assistant";
+      typing.setAttribute("data-kx-typing", "true");
+      typing.setAttribute("aria-label", "Kairox is typing");
+
+      const bubble = document.createElement("div");
+      bubble.setAttribute("role", "status");
+      bubble.setAttribute("aria-live", "polite");
+
+      const label = document.createElement("span");
+      label.textContent = "Kairox is typing";
+
+      const dots = document.createElement("span");
+      dots.setAttribute("aria-hidden", "true");
+
+      const apply = (el, styles) => {
+        Object.entries(styles).forEach(([key, value]) => el.style.setProperty(key, value, "important"));
+      };
+
+      apply(typing, {
+        "display": "block",
+        "width": "100%",
+        "max-width": "100%",
+        "margin": "8px 0",
+        "padding": "0",
+        "text-align": "left"
+      });
+
+      apply(bubble, {
+        "display": "inline-flex",
+        "flex-direction": "row",
+        "align-items": "center",
+        "justify-content": "flex-start",
+        "flex-wrap": "nowrap",
+        "gap": "8px",
+        "width": "auto",
+        "min-width": "174px",
+        "max-width": "none",
+        "height": "auto",
+        "min-height": "38px",
+        "white-space": "nowrap",
+        "overflow": "visible",
+        "text-overflow": "clip",
+        "padding": "10px 14px",
+        "border-radius": "16px 16px 16px 6px",
+        "background": "rgba(255,255,255,.96)",
+        "border": "1px solid rgba(15,118,110,.12)",
+        "box-shadow": "0 8px 22px rgba(4,30,43,.08)",
+        "color": "#617074",
+        "line-height": "1",
+        "box-sizing": "border-box"
+      });
+
+      apply(label, {
+        "display": "inline-block",
+        "flex": "0 0 auto",
+        "width": "auto",
+        "min-width": "max-content",
+        "max-width": "none",
+        "white-space": "nowrap",
+        "overflow": "visible",
+        "text-overflow": "clip",
+        "font-size": "14px",
+        "font-weight": "600",
+        "line-height": "1",
+        "letter-spacing": "-0.01em",
+        "color": "#617074",
+        "background": "transparent",
+        "border": "0",
+        "box-shadow": "none"
+      });
+
+      apply(dots, {
+        "display": "inline-flex",
+        "flex-direction": "row",
+        "align-items": "center",
+        "justify-content": "flex-start",
+        "flex": "0 0 auto",
+        "flex-wrap": "nowrap",
+        "gap": "4px",
+        "width": "26px",
+        "min-width": "26px",
+        "max-width": "26px",
+        "height": "8px",
+        "min-height": "8px",
+        "max-height": "8px",
+        "padding": "0",
+        "margin": "0",
+        "white-space": "nowrap",
+        "overflow": "visible",
+        "background": "transparent",
+        "border": "0",
+        "box-shadow": "none",
+        "transform": "none",
+        "box-sizing": "border-box"
+      });
+
+      const dotElements = [];
+      for (let i = 0; i < 3; i += 1) {
+        const dot = document.createElement("span");
+        dot.className = "kx-typing-dot-js-v27";
+        apply(dot, {
+          "display": "inline-block",
+          "flex": "0 0 6px",
+          "width": "6px",
+          "min-width": "6px",
+          "max-width": "6px",
+          "height": "6px",
+          "min-height": "6px",
+          "max-height": "6px",
+          "padding": "0",
+          "margin": "0",
+          "border-radius": "50%",
+          "background": "#0F766E",
+          "border": "0",
+          "box-shadow": "none",
+          "opacity": ".32",
+          "transform": "translateY(0) scale(.85)",
+          "transition": "opacity .18s ease, transform .18s ease"
+        });
+        dotElements.push(dot);
+        dots.appendChild(dot);
+      }
+
+      bubble.appendChild(label);
+      bubble.appendChild(dots);
+      typing.appendChild(bubble);
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      let activeIndex = 0;
+      const paintDots = () => {
+        dotElements.forEach((dot, index) => {
+          const isActive = index === activeIndex;
+          dot.style.setProperty("opacity", isActive ? "1" : ".32", "important");
+          dot.style.setProperty("transform", isActive ? "translateY(-3px) scale(1)" : "translateY(0) scale(.85)", "important");
+        });
+        activeIndex = (activeIndex + 1) % dotElements.length;
+      };
+
+      paintDots();
+      const intervalId = window.setInterval(paintDots, 260);
+      typing.__kxTypingInterval = intervalId;
+    }
+
+    function removeTypingIndicator() {
+      messages.querySelectorAll("[data-kx-typing='true']").forEach((el) => {
+        if (el.__kxTypingInterval) {
+          window.clearInterval(el.__kxTypingInterval);
+        }
+        el.remove();
+      });
+    }
+
     function addMessage(role, text) {
       const entry = { role, text, time: nowTime() };
       state.history.push(entry);
@@ -437,15 +595,19 @@
       typingNote.textContent = "";
       addMessage("user", text);
       setSending(true);
+      showTypingIndicator();
 
       try {
         const payload = await postToWebhook(text);
+        removeTypingIndicator();
         const reply = extractReply(payload) || "Thanks. I received your message. Please share your business type, team size and the process you want to automate so I can guide you better.";
         addMessage("assistant", reply);
       } catch (error) {
         console.error("[Kairox] chat webhook connection error", error);
+        removeTypingIndicator();
         addMessage("assistant", "I could not load the live AI reply from the webhook. Please check the browser console for the exact webhook error, or use the Open agent link while this connection is finalised.");
       } finally {
+        removeTypingIndicator();
         setSending(false);
         input.focus();
       }

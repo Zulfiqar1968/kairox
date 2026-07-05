@@ -1,0 +1,152 @@
+/* =========================================================
+   KAIROX HARD INLINE TYPING INDICATOR V25
+   JS applies the actual layout with inline !important styles.
+   This file only supplies animation keyframes and neutralizes older typing rules.
+   ========================================================= */
+
+[data-kx-typing="true"],
+[data-kx-typing="true"] *,
+.kx-chat-msg[data-kx-typing="true"],
+.kx-chat-msg[data-kx-typing="true"] > div {
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+}
+
+[data-kx-typing="true"] {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+[data-kx-typing="true"] > div {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+[data-kx-typing="true"] span {
+  box-shadow: none !important;
+}
+
+@keyframes kxTypingDotPulseHardV25 {
+  0%, 80%, 100% {
+    transform: translateY(0) scale(.85);
+    opacity: .34;
+  }
+  40% {
+    transform: translateY(-3px) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes kxTypingFadeInHardV25 {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-kx-typing="true"],
+  [data-kx-typing="true"] span {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   KAIROX TYPING ANIMATION RESTORED V26
+   Keeps the V25 correct one-line format but restores dot animation.
+   ========================================================= */
+
+/* The JS-created dots now use this class and do not have inline transform/opacity,
+   so keyframes can animate them correctly. */
+.kx-typing-dot-animated-v26 {
+  opacity: .34 !important;
+  transform: translateY(0) scale(.85) !important;
+  animation-name: kxTypingDotPulseAnimatedV26 !important;
+  animation-duration: 1.05s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+  animation-fill-mode: both !important;
+  will-change: transform, opacity !important;
+}
+
+.kx-typing-dot-animated-v26:nth-child(2) {
+  animation-delay: .16s !important;
+}
+
+.kx-typing-dot-animated-v26:nth-child(3) {
+  animation-delay: .32s !important;
+}
+
+@keyframes kxTypingDotPulseAnimatedV26 {
+  0%, 80%, 100% {
+    transform: translateY(0) scale(.85);
+    opacity: .34;
+  }
+  40% {
+    transform: translateY(-3px) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Keep the final one-line layout stable. */
+[data-kx-typing="true"] > div {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kx-typing-dot-animated-v26 {
+    animation: none !important;
+    opacity: .55 !important;
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   KAIROX JS-ANIMATED TYPING DOTS V27
+   The dots are animated by JavaScript interval to avoid CSS keyframe conflicts.
+   This CSS only preserves the correct one-line layout.
+   ========================================================= */
+
+[data-kx-typing="true"],
+[data-kx-typing="true"] *,
+.kx-typing-dot-js-v27 {
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+}
+
+[data-kx-typing="true"] {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+[data-kx-typing="true"] > div {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.kx-typing-dot-js-v27 {
+  transition: opacity .18s ease, transform .18s ease !important;
+  will-change: opacity, transform !important;
+}
