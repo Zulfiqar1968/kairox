@@ -163,8 +163,8 @@
       <div class="kx-chat-quick">
         <button type="button" data-kx-question="What AI automation services does Kairox offer?">Services</button>
         <button type="button" data-kx-question="How much does Kairox AI automation cost?">Pricing</button>
-        <button type="button" data-kx-question="Can I book a consultation?">Book consultation</button>
-        <a href="${escapeHtml(config.chatUrl)}" target="_blank" rel="noopener noreferrer">Open agent <i class="bi bi-box-arrow-up-right"></i></a>
+        <button type="button" data-kx-question="Kairox is good for What industries?">Industries</button>
+        <button type="button" data-kx-question="Can I book a consultation?">Booking</button>
       </div>
 
       <div class="kx-chat-typing-note" aria-live="polite"></div>
