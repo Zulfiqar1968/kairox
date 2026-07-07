@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  console.log("[Kairox] chatbot loaded: v27 js-animated-typing");
+  console.log("[Kairox] chatbot loaded: v33 form-top-clean-payload-on-load");
 
   const defaults = {
     brand: "Kairox AI Assistant",
@@ -12,20 +12,26 @@
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v27";
+  const historyKey = "kx_chat_history_v33";
 
-  let sessionId = localStorage.getItem(sessionKey);
-  if (!sessionId) {
-    sessionId = "kx_" + Math.random().toString(36).slice(2, 10) + "_" + Date.now();
-    localStorage.setItem(sessionKey, sessionId);
-  }
+  // Fresh chat on every page load/refresh.
+  localStorage.removeItem(sessionKey);
+  localStorage.removeItem(historyKey);
+  const sessionId = "kx_" + Math.random().toString(36).slice(2, 10) + "_" + Date.now();
 
   const state = {
     isRibbonVisible: false,
     isOpen: false,
     isSending: false,
     hideTimer: null,
-    history: safeParse(localStorage.getItem(historyKey), [])
+    history: [],
+    leadStep: "form",
+    lead: {
+      name: "",
+      phone: "",
+      email: "",
+      company: ""
+    }
   };
 
   function safeParse(value, fallback) {
@@ -58,7 +64,8 @@
   }
 
   function saveHistory() {
-    localStorage.setItem(historyKey, JSON.stringify(state.history.slice(-40)));
+    // Do not persist chat history. The chat window and buffer reset on reload.
+    localStorage.removeItem(historyKey);
   }
 
   function extractReply(data) {
@@ -87,7 +94,23 @@
     return "";
   }
 
+  function resetStoredChatBuffer() {
+    Object.keys(localStorage).forEach((key) => {
+      if (
+        key === sessionKey ||
+        key === historyKey ||
+        key === "kairox_chat_history" ||
+        key === "kairox_chat_session_id" ||
+        key.indexOf("kx_chat_history") === 0 ||
+        key.indexOf("kx_session") === 0
+      ) {
+        localStorage.removeItem(key);
+      }
+    });
+  }
+
   function buildWidget() {
+    resetStoredChatBuffer();
     document.querySelectorAll(".kx-floating-actions, .kx-chat-window").forEach((el) => el.remove());
 
     const actions = document.createElement("div");
@@ -163,6 +186,7 @@
     const form = panel.querySelector(".kx-chat-input-row");
     const input = panel.querySelector(".kx-chat-input-field");
     const typingNote = panel.querySelector(".kx-chat-typing-note");
+    const quickArea = panel.querySelector(".kx-chat-quick");
 
     function applyMobileLayout() {
       if (!isMobile()) {
@@ -275,6 +299,7 @@
 
       chatButton.classList.add("active");
       renderHistory();
+      if (!isLeadComplete()) appendLeadForm();
       setTimeout(() => {
         try { input.focus({ preventScroll: true }); } catch { input.focus(); }
       }, 80);
@@ -321,6 +346,7 @@
 
     clearButton.addEventListener("click", function () {
       state.history = [];
+      resetLeadCapture();
       saveHistory();
       renderHistory(true);
       input.focus();
@@ -328,6 +354,11 @@
 
     panel.querySelectorAll("[data-kx-question]").forEach((btn) => {
       btn.addEventListener("click", function () {
+        if (!isLeadComplete()) {
+          const firstField = messages.querySelector("[data-kx-lead-form='true'] input");
+          if (firstField) firstField.focus();
+          return;
+        }
         sendMessage(btn.getAttribute("data-kx-question"));
       });
     });
@@ -349,13 +380,203 @@
       setTimeout(applyMobileLayout, 250);
     });
 
+    function firstName() {
+      return String(state.lead.name || "").trim().split(/\s+/)[0] || "there";
+    }
+
+    function isLeadComplete() {
+      return state.leadStep === "complete";
+    }
+
+    function resetLeadCapture() {
+      state.leadStep = "form";
+      state.lead = { name: "", phone: "", email: "", company: "" };
+      updateLeadUi();
+    }
+
+    function leadPromptForStep() {
+      return "Please complete the short contact form below so I can personalize the consultation.";
+    }
+
+    function updateLeadUi() {
+      if (!input) return;
+
+      const complete = isLeadComplete();
+      const submitButton = form ? form.querySelector("button") : null;
+
+      if (quickArea) {
+        quickArea.style.display = complete ? "" : "none";
+      }
+
+      input.placeholder = complete ? "Type your message..." : "Please complete the contact form above first";
+      input.setAttribute("aria-label", input.placeholder);
+      input.disabled = !complete || state.isSending;
+
+      if (submitButton) {
+        submitButton.disabled = !complete || state.isSending;
+      }
+    }
+
+    function getLeadFormValues(leadForm) {
+      return {
+        name: String(leadForm.querySelector("[name='name']").value || "").trim(),
+        phone: String(leadForm.querySelector("[name='phone']").value || "").trim(),
+        email: String(leadForm.querySelector("[name='email']").value || "").trim(),
+        company: String(leadForm.querySelector("[name='company']").value || "").trim()
+      };
+    }
+
+    function validateLeadForm(values) {
+      if (!values.name || !values.phone || !values.email || !values.company) {
+        return "Please complete all four fields before starting the chat.";
+      }
+
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
+      if (!emailOk) {
+        return "Please enter a valid email address.";
+      }
+
+      return "";
+    }
+
+    async function postLeadCapture() {
+      const leadPayload = {
+        eventType: "lead_capture",
+        sessionId,
+page: window.location.href,
+        source: "kairox-website-chat",
+        channel: "website",
+        submittedAt: new Date().toISOString()
+      };
+
+      try {
+        await fetch(config.webhook, {
+          method: "POST",
+          mode: "cors",
+          credentials: "omit",
+          redirect: "follow",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*"
+          },
+          body: JSON.stringify(leadPayload)
+        });
+      } catch (error) {
+        console.warn("[Kairox] lead capture webhook warning", error);
+      }
+    }
+
+    function appendLeadForm() {
+      messages.querySelectorAll("[data-kx-lead-form='true']").forEach((el) => el.remove());
+      if (isLeadComplete()) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "kx-chat-msg assistant kx-lead-form-message";
+      wrapper.setAttribute("data-kx-lead-form", "true");
+      wrapper.innerHTML = `
+        <div class="kx-lead-form-card">
+          <div class="kx-lead-form-heading">Welcome to Kairox AI</div>
+          <div class="kx-lead-form-subtitle">Share your details to begin a personalized AI automation consultation.</div>
+          <form class="kx-lead-form" novalidate>
+            <label class="kx-lead-field">
+              <span>Name</span>
+              <input type="text" name="name" autocomplete="name" placeholder="Your full name" required>
+            </label>
+
+            <label class="kx-lead-field">
+              <span>Phone</span>
+              <input type="tel" name="phone" autocomplete="tel" placeholder="+971 ..." required>
+            </label>
+
+            <label class="kx-lead-field">
+              <span>Email</span>
+              <input type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+            </label>
+
+            <label class="kx-lead-field">
+              <span>Company</span>
+              <input type="text" name="company" autocomplete="organization" placeholder="Company name" required>
+            </label>
+
+            <div class="kx-lead-form-error" aria-live="polite"></div>
+            <button type="submit" class="kx-lead-submit">Start chat</button>
+          </form>
+        </div>
+        <span>${escapeHtml(nowTime())}</span>
+      `;
+
+      if (messages.firstChild) {
+        messages.insertBefore(wrapper, messages.firstChild);
+      } else {
+        messages.appendChild(wrapper);
+      }
+      messages.scrollTop = 0;
+
+      const leadForm = wrapper.querySelector(".kx-lead-form");
+      const errorBox = wrapper.querySelector(".kx-lead-form-error");
+      const firstInput = wrapper.querySelector("input");
+
+      leadForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const values = getLeadFormValues(leadForm);
+        const error = validateLeadForm(values);
+
+        if (error) {
+          errorBox.textContent = error;
+          const firstEmpty = leadForm.querySelector("input:invalid") || leadForm.querySelector("input");
+          if (firstEmpty) firstEmpty.focus();
+          return;
+        }
+
+        errorBox.textContent = "";
+        state.lead = values;
+        state.leadStep = "complete";
+
+        wrapper.remove();
+        updateLeadUi();
+
+        addMessage("assistant", "Thank you, " + firstName() + ". How can I help you today?");
+        postLeadCapture();
+
+        input.disabled = false;
+        const submitButton = form.querySelector("button");
+        if (submitButton) submitButton.disabled = false;
+        input.focus();
+      });
+
+      setTimeout(() => {
+        if (firstInput && !isLeadComplete()) firstInput.focus();
+      }, 150);
+    }
+
+    function handleLeadCapture() {
+      appendLeadForm();
+    }
+
+    function ensureLeadFormVisible() {
+      if (!isLeadComplete() && !messages.querySelector("[data-kx-lead-form='true']")) {
+        appendLeadForm();
+      }
+    }
+
     function renderHistory(forceGreeting = false) {
       messages.innerHTML = "";
+
       if (!state.history.length || forceGreeting) {
-        addMessage("assistant", "Hi, I’m Kairox AI Assistant. I can help with AI agents, workflow automation, pricing, consultations and UAE SME automation use cases.");
+        addMessage("assistant", "Welcome to Kairox AI. Please complete the short form below so I can tailor the automation advice to your business.");
       } else {
         state.history.forEach((item) => appendMessage(item.role, item.text, item.time));
       }
+
+      // Always show the lead form whenever the lead is incomplete.
+      // This fixes the first-open case where the welcome message was already in history
+      // but the form itself is a DOM element, not a saved history message.
+      if (!isLeadComplete()) {
+        appendLeadForm();
+      }
+
+      updateLeadUi();
       messages.scrollTop = messages.scrollHeight;
     }
 
@@ -533,8 +754,9 @@
 
     function setSending(value) {
       state.isSending = value;
-      form.querySelector("button").disabled = value;
-      input.disabled = value;
+      const submitButton = form.querySelector("button");
+      if (submitButton) submitButton.disabled = value || !isLeadComplete();
+      input.disabled = value || !isLeadComplete();
       typingNote.textContent = value ? "Kairox is thinking..." : "";
     }
 
@@ -543,12 +765,11 @@
     async function postToWebhook(text) {
       const payload = {
         message: text,
-        chatInput: text,
-        text: text,
         sessionId,
+lead: Object.assign({}, state.lead),
         page: window.location.href,
-        source: "kairox_website_chat",
-        channel: "website_chat",
+        source: "kairox-website-chat",
+        channel: "website",
         submittedAt: new Date().toISOString()
       };
 
@@ -591,9 +812,19 @@
       const text = String(value || "").trim();
       if (!text || state.isSending) return;
 
+      if (!isLeadComplete()) {
+        typingNote.textContent = "Please complete the contact form above first.";
+        input.value = "";
+        const firstField = messages.querySelector("[data-kx-lead-form='true'] input");
+        if (firstField) firstField.focus();
+        setTimeout(() => { typingNote.textContent = ""; }, 1400);
+        return;
+      }
+
       input.value = "";
       typingNote.textContent = "";
       addMessage("user", text);
+
       setSending(true);
       showTypingIndicator();
 
@@ -609,6 +840,7 @@
       } finally {
         removeTypingIndicator();
         setSending(false);
+        updateLeadUi();
         input.focus();
       }
     }
@@ -621,7 +853,21 @@
       collapseRibbon
     };
 
-    renderHistory();
+    state.isOpen = false;
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    panel.style.removeProperty("display");
+    panel.style.removeProperty("visibility");
+    panel.style.removeProperty("opacity");
+    panel.style.removeProperty("pointer-events");
+
+    state.history = [];
+    resetLeadCapture();
+    input.value = "";
+    typingNote.textContent = "";
+    removeTypingIndicator();
+    renderHistory(true);
+    if (!isLeadComplete()) appendLeadForm();
     syncRibbon();
   }
 

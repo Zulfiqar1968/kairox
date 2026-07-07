@@ -1,0 +1,23 @@
+/* =========================================================
+   KAIROX WELCOME + LEAD FORM ON LOAD V32
+   Welcome message and lead form appear together on first chatbot load/open.
+   ========================================================= */
+
+.kx-lead-form-message {
+  margin-top: 6px !important;
+}
+
+.kx-lead-form-card {
+  animation: kxLeadFormAppearV32 .22s ease both !important;
+}
+
+@keyframes kxLeadFormAppearV32 {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

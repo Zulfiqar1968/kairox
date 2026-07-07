@@ -86,3 +86,17 @@
   transition: opacity .18s ease, transform .18s ease !important;
   will-change: opacity, transform !important;
 }
+
+/* =========================================================
+   KAIROX CHAT REFRESH ON LOAD V28
+   Chat history/buffer resets on every page load or refresh.
+   ========================================================= */
+
+.kx-chat-window[aria-hidden="true"] {
+  pointer-events: none !important;
+}
+
+.kx-chat-input-field {
+  resize: none !important;
+}
+

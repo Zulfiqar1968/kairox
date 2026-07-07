@@ -1,39 +1,4 @@
 /* =========================================================
-   KAIROX JS-ANIMATED TYPING DOTS V27
-   The dots are animated by JavaScript interval to avoid CSS keyframe conflicts.
-   This CSS only preserves the correct one-line layout.
-   ========================================================= */
-
-[data-kx-typing="true"],
-[data-kx-typing="true"] *,
-.kx-typing-dot-js-v27 {
-  box-sizing: border-box !important;
-  white-space: nowrap !important;
-}
-
-[data-kx-typing="true"] {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  text-align: left !important;
-  overflow: visible !important;
-}
-
-[data-kx-typing="true"] > div {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-}
-
-.kx-typing-dot-js-v27 {
-  transition: opacity .18s ease, transform .18s ease !important;
-  will-change: opacity, transform !important;
-}
-
-/* =========================================================
    KAIROX CHAT REFRESH ON LOAD V28
    Chat history/buffer resets on every page load or refresh.
    ========================================================= */

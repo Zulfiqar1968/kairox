@@ -1,0 +1,12 @@
+/* =========================================================
+   KAIROX LEAD CAPTURE START V30
+   Collects name, phone, email, and company before live AI chat.
+   ========================================================= */
+
+.kx-chat-window .kx-chat-input-field::placeholder {
+  opacity: .72 !important;
+}
+
+.kx-chat-quick[style*="display: none"] {
+  display: none !important;
+}
