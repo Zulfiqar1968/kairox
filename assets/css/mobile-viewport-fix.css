@@ -2037,3 +2037,55 @@ footer,
     min-height: 33px !important;
   }
 }
+
+/* =========================================================
+   KAIROX NO EMPTY HISTORY GREETING V34
+   If chat history is empty, no assistant welcome bubble is added.
+   The lead form remains the first visible element.
+   ========================================================= */
+
+/* =========================================================
+   KAIROX REMOVE POPUP CALL + DELETE ICONS V35
+   Removes call and delete/trash/reset icons from the popup chatbot window only.
+   Floating side/ribbon buttons outside the popup are preserved.
+   ========================================================= */
+
+/* Header/action icon buttons inside the chatbot popup */
+.kx-chat-window .kx-chat-call,
+.kx-chat-window .kx-call,
+.kx-chat-window .kx-chat-delete,
+.kx-chat-window .kx-chat-trash,
+.kx-chat-window .kx-chat-reset,
+.kx-chat-window .kx-chat-clear,
+.kx-chat-window [data-kx-call],
+.kx-chat-window [data-kx-delete],
+.kx-chat-window [data-kx-trash],
+.kx-chat-window [data-kx-reset],
+.kx-chat-window [data-kx-clear],
+.kx-chat-window button[aria-label*="Call" i],
+.kx-chat-window a[aria-label*="Call" i],
+.kx-chat-window button[aria-label*="Delete" i],
+.kx-chat-window button[aria-label*="Trash" i],
+.kx-chat-window button[aria-label*="Reset" i],
+.kx-chat-window button[aria-label*="Clear" i],
+.kx-chat-window a[href*="retellai.com/kairox"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* If a header actions wrapper becomes empty, avoid leaving a visual gap. */
+.kx-chat-window .kx-chat-actions:empty,
+.kx-chat-window .kx-chat-header-actions:empty,
+.kx-chat-window .kx-chat-tools:empty {
+  display: none !important;
+}
+
+/* Keep the popup close/minimize control visible. */
+.kx-chat-window .kx-chat-close,
+.kx-chat-window button[aria-label*="Close" i],
+.kx-chat-window button[aria-label*="Minimize" i] {
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}

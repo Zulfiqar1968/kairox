@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-  console.log("[Kairox] chatbot loaded: v33 form-top-clean-payload-on-load");
+  console.log("[Kairox] chatbot loaded: v35 remove-popup-icons-css");
 
   const defaults = {
     brand: "Kairox AI Assistant",
@@ -12,7 +12,7 @@
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v33";
+  const historyKey = "kx_chat_history_v35";
 
   // Fresh chat on every page load/refresh.
   localStorage.removeItem(sessionKey);
@@ -163,8 +163,8 @@
       <div class="kx-chat-quick">
         <button type="button" data-kx-question="What AI automation services does Kairox offer?">Services</button>
         <button type="button" data-kx-question="How much does Kairox AI automation cost?">Pricing</button>
-        <button type="button" data-kx-question="Kairox is good for What industries?">Industries</button>
-        <button type="button" data-kx-question="Can I book a consultation?">Booking</button>
+        <button type="button" data-kx-question="Can I book a consultation?">Book consultation</button>
+        <a href="${escapeHtml(config.chatUrl)}" target="_blank" rel="noopener noreferrer">Open agent <i class="bi bi-box-arrow-up-right"></i></a>
       </div>
 
       <div class="kx-chat-typing-note" aria-live="polite"></div>
@@ -563,10 +563,12 @@ page: window.location.href,
     function renderHistory(forceGreeting = false) {
       messages.innerHTML = "";
 
-      if (!state.history.length || forceGreeting) {
-        addMessage("assistant", "Welcome to Kairox AI. Please complete the short form below so I can tailor the automation advice to your business.");
-      } else {
+      if (state.history.length) {
         state.history.forEach((item) => appendMessage(item.role, item.text, item.time));
+      }
+
+      if (!state.history.length && !isLeadComplete()) {
+        appendLeadForm();
       }
 
       // Always show the lead form whenever the lead is incomplete.
