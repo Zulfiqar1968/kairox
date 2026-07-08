@@ -1,0 +1,95 @@
+/* =========================================================
+   KAIROX RIBBON GAPLESS V45
+   Removes the small visual gap between the arrow tab and ribbon body.
+   ========================================================= */
+
+.kx-floating-actions {
+  width: 129px !important;
+  max-width: 129px !important;
+}
+
+/* Collapsed: only the 44px arrow tab remains visible. Body overlaps the tab by 3px, so translate is 85px. */
+.kx-floating-actions.is-collapsed,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+  transform: translate(85px, -50%) !important;
+}
+
+/* Expanded: one seamless attached unit. */
+.kx-floating-actions.is-expanded,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-ribbon-toggle {
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  margin: 0 !important;
+  border-right: 0 !important;
+  border-radius: 22px 0 0 22px !important;
+}
+
+/* Pull the dark ribbon body under the edge of the arrow tab to remove the gap. */
+.kx-action-ribbon {
+  margin-left: -3px !important;
+  width: 88px !important;
+  min-width: 88px !important;
+  max-width: 88px !important;
+  border-left: 0 !important;
+  transform: none !important;
+}
+
+/* A tiny connector under the overlap prevents a hairline gap from anti-aliased borders/shadows. */
+.kx-floating-actions::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 41px !important;
+  top: 43px !important;
+  width: 7px !important;
+  height: 92px !important;
+  background: linear-gradient(145deg, rgba(3,26,35,.98) 0%, rgba(4,30,43,.98) 55%, rgba(11,93,95,.94) 100%) !important;
+  z-index: 2147482550 !important;
+  pointer-events: none !important;
+  border-top: 1px solid rgba(230,200,115,.18) !important;
+  border-bottom: 1px solid rgba(230,200,115,.18) !important;
+}
+
+.kx-floating-actions.is-expanded .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-action-ribbon,
+.kx-floating-actions.is-collapsed .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-action-ribbon {
+  margin-left: -3px !important;
+  transform: none !important;
+}
+
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    width: 123px !important;
+    max-width: 123px !important;
+  }
+
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+    transform: translate(81px, -50%) !important;
+  }
+
+  .kx-ribbon-toggle {
+    flex-basis: 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+  }
+
+  .kx-action-ribbon {
+    margin-left: -3px !important;
+    width: 84px !important;
+    min-width: 84px !important;
+    max-width: 84px !important;
+  }
+
+  .kx-floating-actions::after {
+    left: 39px !important;
+    width: 7px !important;
+  }
+}

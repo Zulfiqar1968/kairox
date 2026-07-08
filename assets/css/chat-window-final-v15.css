@@ -1173,3 +1173,647 @@
   color: #07353D !important;
   font-weight: 850 !important;
 }
+
+/* =========================================================
+   KAIROX FORM GATES CHAT + CALL V40
+   The same lead form appears first for both Chat and Call.
+   ========================================================= */
+
+.kx-lead-submit {
+  transition: transform .16s ease, box-shadow .16s ease !important;
+}
+
+.kx-lead-form-card {
+  max-height: calc(100vh - 210px) !important;
+  overflow-y: auto !important;
+}
+
+/* Retell widget should remain above page UI once opened. */
+[id*="retell" i],
+[class*="retell" i] {
+  z-index: 2147483000;
+}
+
+/* =========================================================
+   KAIROX RETELL DIRECT FORM-FIRST V41
+   Uses the direct Retell Orb agent link after the lead form.
+   Removes the old Retell widget button flow.
+   ========================================================= */
+
+.kx-direct-call-panel {
+  display: none !important;
+  position: absolute !important;
+  inset: 58px 10px 10px 10px !important;
+  z-index: 2147483500 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(15,118,110,.18) !important;
+  box-shadow: 0 22px 70px rgba(4,30,43,.28) !important;
+}
+
+.kx-direct-call-panel.open {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.kx-direct-call-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 10px 12px !important;
+  min-height: 54px !important;
+  background: linear-gradient(135deg, #062B33, #0F766E) !important;
+  color: #ffffff !important;
+}
+
+.kx-direct-call-head strong {
+  display: block !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  line-height: 1.1 !important;
+}
+
+.kx-direct-call-head span {
+  display: block !important;
+  margin-top: 3px !important;
+  font-size: 11px !important;
+  color: rgba(255,255,255,.78) !important;
+}
+
+.kx-direct-call-close {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.24) !important;
+  background: rgba(255,255,255,.12) !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+.kx-direct-call-frame {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-height: 390px !important;
+  border: 0 !important;
+  background: #ffffff !important;
+  position: relative !important;
+  z-index: 2147483501 !important;
+}
+
+.kx-direct-call-fallback {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
+  border-top: 1px solid rgba(4,30,43,.08) !important;
+  background: #F7FBFA !important;
+  color: rgba(4,30,43,.64) !important;
+  font-size: 11px !important;
+}
+
+.kx-direct-call-fallback a {
+  color: #0F766E !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+
+.kx-chat-window.kx-direct-call-mode .kx-chat-messages,
+.kx-chat-window.kx-direct-call-mode .kx-chat-input-row,
+.kx-chat-window.kx-direct-call-mode .kx-chat-quick {
+  display: none !important;
+}
+
+/* If an old Retell widget is cached/injected, keep it above the chatbot instead of behind it. */
+[id*="retell" i],
+[class*="retell" i],
+iframe[src*="retell" i],
+iframe[src*="agent.retellai.com" i] {
+  z-index: 2147483600 !important;
+}
+
+@media (max-width: 430px) {
+  .kx-direct-call-panel {
+    inset: 54px 8px 8px 8px !important;
+  }
+
+  .kx-direct-call-frame {
+    min-height: 360px !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON TOGGLE RESTORED V42
+   Restores reliable expand/collapse behavior for the floating ribbon.
+   ========================================================= */
+
+.kx-floating-actions {
+  pointer-events: auto !important;
+  z-index: 2147482500 !important;
+}
+
+.kx-ribbon-toggle {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 2147482600 !important;
+  position: relative !important;
+  touch-action: manipulation !important;
+}
+
+.kx-action-ribbon,
+.kx-ribbon-buttons,
+.kx-float-btn {
+  pointer-events: auto !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-action-ribbon {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateX(16px) scale(.96) !important;
+  max-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.kx-floating-actions.is-expanded .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-action-ribbon {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateX(0) scale(1) !important;
+  max-width: 280px !important;
+  overflow: visible !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-expand {
+  display: inline-flex !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-collapse {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-expand {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-collapse {
+  display: inline-flex !important;
+}
+
+/* Keep the direct Retell call panel above the chat, but not above the ribbon toggle. */
+.kx-direct-call-panel {
+  z-index: 2147482400 !important;
+}
+
+/* =========================================================
+   KAIROX RIBBON VISIBLE V43
+   Fixes case where the arrow changed >/< but the ribbon body stayed hidden.
+   ========================================================= */
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 122px !important;
+  max-width: 122px !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 2147482500 !important;
+  transition: transform .28s ease, opacity .2s ease !important;
+}
+
+/* Collapsed: keep only the side tab visible. */
+.kx-floating-actions.is-collapsed,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+  transform: translate(calc(100% - 46px), -50%) !important;
+}
+
+/* Expanded: slide the whole ribbon body into view. */
+.kx-floating-actions.is-expanded,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-action-ribbon {
+  display: grid !important;
+  grid-template-columns: 46px 76px !important;
+  align-items: center !important;
+  width: 122px !important;
+  min-width: 122px !important;
+  max-width: 122px !important;
+  min-height: 172px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Collapsed body hidden but tab remains visible through the parent offset. */
+.kx-floating-actions.is-collapsed .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-action-ribbon {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  max-width: 122px !important;
+  transform: translateX(0) scale(1) !important;
+}
+
+/* Expanded body fully visible. */
+.kx-floating-actions.is-expanded .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-action-ribbon {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  max-width: 122px !important;
+  transform: translateX(0) scale(1) !important;
+}
+
+.kx-ribbon-buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 76px !important;
+  min-width: 76px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  display: grid !important;
+  place-items: center !important;
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.kx-ribbon-toggle {
+  display: grid !important;
+  place-items: center !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  z-index: 2147482600 !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-expand {
+  display: inline-flex !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-collapse {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-expand {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-collapse {
+  display: inline-flex !important;
+}
+
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    width: 116px !important;
+    max-width: 116px !important;
+  }
+
+  .kx-action-ribbon {
+    width: 116px !important;
+    min-width: 116px !important;
+    max-width: 116px !important;
+    grid-template-columns: 44px 72px !important;
+  }
+
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+    transform: translate(calc(100% - 44px), -50%) !important;
+  }
+
+  .kx-ribbon-buttons {
+    width: 72px !important;
+    min-width: 72px !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON ALIGNED V44
+   Fixes the separated/misaligned arrow and button body.
+   The toggle and ribbon buttons now behave as one attached unit.
+   ========================================================= */
+
+.kx-floating-actions {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 132px !important;
+  max-width: 132px !important;
+  height: 178px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 2147482500 !important;
+  transition: transform .28s ease !important;
+}
+
+/* Collapsed: only the 44px arrow tab is visible. */
+.kx-floating-actions.is-collapsed,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+  transform: translate(88px, -50%) !important;
+}
+
+/* Expanded: arrow + call/chat body are attached and visible. */
+.kx-floating-actions.is-expanded,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-ribbon-toggle {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 92px !important;
+  min-height: 92px !important;
+  margin: 0 !important;
+  border-radius: 22px 0 0 22px !important;
+  border: 1px solid rgba(230,200,115,.38) !important;
+  border-right: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 2147482600 !important;
+  touch-action: manipulation !important;
+}
+
+.kx-ribbon-toggle:hover,
+.kx-ribbon-toggle:focus-visible {
+  transform: none !important;
+}
+
+.kx-action-ribbon {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 88px !important;
+  align-items: center !important;
+  justify-items: center !important;
+  width: 88px !important;
+  min-width: 88px !important;
+  max-width: 88px !important;
+  height: 178px !important;
+  min-height: 178px !important;
+  margin: 0 !important;
+  padding: 12px 10px !important;
+  border-radius: 0 0 0 0 !important;
+  border-left: 0 !important;
+  overflow: visible !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Keep body attached; just disable clicks while collapsed because it is off-screen. */
+.kx-floating-actions.is-collapsed .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-action-ribbon {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  max-width: 88px !important;
+  transform: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-action-ribbon {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  max-width: 88px !important;
+  transform: none !important;
+}
+
+.kx-ribbon-buttons {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 68px !important;
+  min-width: 68px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.kx-action-ribbon .kx-float-btn,
+.kx-action-ribbon .kx-float-call,
+.kx-action-ribbon .kx-float-chat {
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  display: grid !important;
+  place-items: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-ribbon-buttons,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-ribbon-buttons {
+  pointer-events: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-ribbon-buttons,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-ribbon-buttons {
+  pointer-events: auto !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-expand {
+  display: inline-flex !important;
+}
+
+.kx-floating-actions.is-collapsed .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-toggle-collapse {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-expand,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-expand {
+  display: none !important;
+}
+
+.kx-floating-actions.is-expanded .kx-toggle-collapse,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-toggle-collapse {
+  display: inline-flex !important;
+}
+
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    width: 126px !important;
+    max-width: 126px !important;
+    height: 172px !important;
+  }
+
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+    transform: translate(84px, -50%) !important;
+  }
+
+  .kx-ribbon-toggle {
+    flex-basis: 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+  }
+
+  .kx-action-ribbon {
+    width: 84px !important;
+    min-width: 84px !important;
+    max-width: 84px !important;
+    height: 172px !important;
+    min-height: 172px !important;
+  }
+}
+
+/* =========================================================
+   KAIROX RIBBON GAPLESS V45
+   Removes the small visual gap between the arrow tab and ribbon body.
+   ========================================================= */
+
+.kx-floating-actions {
+  width: 129px !important;
+  max-width: 129px !important;
+}
+
+/* Collapsed: only the 44px arrow tab remains visible. Body overlaps the tab by 3px, so translate is 85px. */
+.kx-floating-actions.is-collapsed,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+  transform: translate(85px, -50%) !important;
+}
+
+/* Expanded: one seamless attached unit. */
+.kx-floating-actions.is-expanded,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] {
+  transform: translate(0, -50%) !important;
+}
+
+.kx-ribbon-toggle {
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  margin: 0 !important;
+  border-right: 0 !important;
+  border-radius: 22px 0 0 22px !important;
+}
+
+/* Pull the dark ribbon body under the edge of the arrow tab to remove the gap. */
+.kx-action-ribbon {
+  margin-left: -3px !important;
+  width: 88px !important;
+  min-width: 88px !important;
+  max-width: 88px !important;
+  border-left: 0 !important;
+  transform: none !important;
+}
+
+/* A tiny connector under the overlap prevents a hairline gap from anti-aliased borders/shadows. */
+.kx-floating-actions::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 41px !important;
+  top: 43px !important;
+  width: 7px !important;
+  height: 92px !important;
+  background: linear-gradient(145deg, rgba(3,26,35,.98) 0%, rgba(4,30,43,.98) 55%, rgba(11,93,95,.94) 100%) !important;
+  z-index: 2147482550 !important;
+  pointer-events: none !important;
+  border-top: 1px solid rgba(230,200,115,.18) !important;
+  border-bottom: 1px solid rgba(230,200,115,.18) !important;
+}
+
+.kx-floating-actions.is-expanded .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="expanded"] .kx-action-ribbon,
+.kx-floating-actions.is-collapsed .kx-action-ribbon,
+.kx-floating-actions[data-kx-ribbon-state="collapsed"] .kx-action-ribbon {
+  margin-left: -3px !important;
+  transform: none !important;
+}
+
+@media (max-width: 767.98px) {
+  .kx-floating-actions {
+    width: 123px !important;
+    max-width: 123px !important;
+  }
+
+  .kx-floating-actions.is-collapsed,
+  .kx-floating-actions[data-kx-ribbon-state="collapsed"] {
+    transform: translate(81px, -50%) !important;
+  }
+
+  .kx-ribbon-toggle {
+    flex-basis: 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+  }
+
+  .kx-action-ribbon {
+    margin-left: -3px !important;
+    width: 84px !important;
+    min-width: 84px !important;
+    max-width: 84px !important;
+  }
+
+  .kx-floating-actions::after {
+    left: 39px !important;
+    width: 7px !important;
+  }
+}
