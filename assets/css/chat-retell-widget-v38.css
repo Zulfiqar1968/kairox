@@ -1,0 +1,14 @@
+/* =========================================================
+   KAIROX RETELL WIDGET CALL V38
+   Ribbon Call uses the official Retell website widget instead of opening a new page or iframe.
+   ========================================================= */
+
+.kx-retell-call-status > div {
+  border: 1px solid rgba(15, 118, 110, .13) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,252,251,.98)) !important;
+}
+
+.kx-retell-call-status strong {
+  color: #07353D !important;
+  font-weight: 850 !important;
+}

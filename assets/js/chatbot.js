@@ -1,18 +1,23 @@
 (function () {
   "use strict";
-  console.log("[Kairox] chatbot loaded: v35 remove-popup-icons-css");
+  console.log("[Kairox] chatbot loaded: v38 retell-widget-call");
 
   const defaults = {
     brand: "Kairox AI Assistant",
     webhook: "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/leads",
-    callUrl: "https://retellai.com/kairox",
+    callUrl: "#voice-call",
     chatUrl: "https://n8n.com/kairox",
-    logo: "assets/img/kairox-logo.svg"
+    retellWidgetSrc: "https://dashboard.retellai.com/retell-widget-v2.js",
+    retellVoicePublicKey: "key_bbc42f067e895883c5ad1856adfd",
+    retellVoiceAgentId: "agent_5ec6dc37c1772b2f9adc74074b",
+    retellAgentVersion: "0",
+    retellTitle: "Talk to Zara",
+    logo: "assets/img/kairox-mark.svg"
   };
 
   const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v35";
+  const historyKey = "kx_chat_history_v38";
 
   // Fresh chat on every page load/refresh.
   localStorage.removeItem(sessionKey);
@@ -125,7 +130,7 @@
       </button>
       <div class="kx-action-ribbon">
         <div class="kx-ribbon-buttons">
-          <a class="kx-float-btn kx-float-call" href="${escapeHtml(config.callUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Call Kairox voice agent">
+          <a class="kx-float-btn kx-float-call" href="#voice-call" data-kx-retell-call="true" aria-label="Talk to Zara voice agent">
             <span class="kx-float-icon"><i class="bi bi-telephone-outbound-fill"></i></span>
             <span class="kx-float-label">Call</span>
           </a>
@@ -152,7 +157,7 @@
           </div>
         </div>
         <div class="kx-chat-header-actions">
-          <a class="kx-chat-head-btn" href="${escapeHtml(config.callUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Open voice call"><i class="bi bi-telephone"></i></a>
+          <button class="kx-chat-head-btn kx-chat-call" type="button" data-kx-retell-call="true" aria-label="Open voice call"><i class="bi bi-telephone"></i></button>
           <button class="kx-chat-head-btn kx-chat-clear" type="button" aria-label="Clear chat"><i class="bi bi-trash3"></i></button>
           <button class="kx-chat-head-btn kx-chat-close" type="button" aria-label="Close chat"><i class="bi bi-x-lg"></i></button>
         </div>
@@ -180,6 +185,7 @@
 
     const toggleButton = actions.querySelector(".kx-ribbon-toggle");
     const chatButton = actions.querySelector(".kx-float-chat");
+    const callButton = actions.querySelector(".kx-float-call");
     const closeButton = panel.querySelector(".kx-chat-close");
     const clearButton = panel.querySelector(".kx-chat-clear");
     const messages = panel.querySelector(".kx-chat-messages");
@@ -322,6 +328,105 @@
       applyMobileLayout();
     }
 
+
+
+    function ensureRetellWidgetScript() {
+      let script = document.getElementById("retell-widget");
+      if (!script) {
+        script = document.createElement("script");
+        script.id = "retell-widget";
+        script.src = config.retellWidgetSrc;
+        script.type = "module";
+        document.head.appendChild(script);
+      }
+
+      script.setAttribute("data-voice-public-key", config.retellVoicePublicKey);
+      script.setAttribute("data-voice-agent-id", config.retellVoiceAgentId);
+      script.setAttribute("data-agent-version", config.retellAgentVersion || "0");
+      script.setAttribute("data-title", config.retellTitle || "Talk to Zara");
+      script.setAttribute("data-auto-open", "false");
+      script.setAttribute("data-show-ai-popup", "false");
+      script.setAttribute("data-color", "#0F766E");
+      script.setAttribute("data-theme-color", "#062B33");
+      script.setAttribute("data-component-color", "#0F766E");
+      script.setAttribute("data-fab-text", "Talk to Zara");
+      script.setAttribute("data-bot-name", "Zara");
+      return script;
+    }
+
+    function eachDomRoot(callback) {
+      const seen = new Set();
+      const walk = (root) => {
+        if (!root || seen.has(root)) return;
+        seen.add(root);
+        callback(root);
+        const nodes = root.querySelectorAll ? root.querySelectorAll("*") : [];
+        nodes.forEach((node) => {
+          if (node.shadowRoot) walk(node.shadowRoot);
+        });
+      };
+      walk(document);
+    }
+
+    function findRetellWidgetTrigger() {
+      const candidates = [];
+      eachDomRoot((root) => {
+        if (!root.querySelectorAll) return;
+        root.querySelectorAll("button, a, [role='button'], div, span").forEach((el) => {
+          if (el.closest && (el.closest(".kx-floating-actions") || el.closest(".kx-chat-window"))) return;
+          const text = (el.textContent || "").trim().toLowerCase();
+          const label = (el.getAttribute("aria-label") || "").toLowerCase();
+          const title = (el.getAttribute("title") || "").toLowerCase();
+          const cls = (el.className && typeof el.className === "string" ? el.className : "").toLowerCase();
+          const id = (el.id || "").toLowerCase();
+          const haystack = [text, label, title, cls, id].join(" ");
+          if ((haystack.includes("retell") || haystack.includes("talk to zara") || haystack.includes("voice") || haystack.includes("call")) && !haystack.includes("kairox")) {
+            candidates.push(el);
+          }
+        });
+      });
+      return candidates.find((el) => typeof el.click === "function") || null;
+    }
+
+    function showRetellCallMessage(message) {
+      openPanel();
+      messages.querySelectorAll("[data-kx-call-status='true']").forEach((el) => el.remove());
+      const box = document.createElement("div");
+      box.className = "kx-chat-msg assistant kx-retell-call-status";
+      box.setAttribute("data-kx-call-status", "true");
+      box.innerHTML = `<div><strong>Talk to Zara</strong><br>${escapeHtml(message)}</div><span>${escapeHtml(nowTime())}</span>`;
+      messages.appendChild(box);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function openRetellVoiceCall(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+      }
+
+      ensureRetellWidgetScript();
+      showRetellCallMessage("Opening the secure voice widget. Please allow microphone access when prompted.");
+
+      let attempts = 0;
+      const tryOpen = () => {
+        attempts += 1;
+        const trigger = findRetellWidgetTrigger();
+        if (trigger) {
+          trigger.click();
+          return;
+        }
+        if (attempts < 24) {
+          window.setTimeout(tryOpen, 250);
+        } else {
+          showRetellCallMessage("The Retell voice widget is loaded on this page. Click the Retell 'Talk to Zara' button if it does not open automatically.");
+        }
+      };
+      window.setTimeout(tryOpen, 250);
+    }
+
+
     function bindOpenButton(element, handler) {
       let last = 0;
       const run = function (event) {
@@ -341,8 +446,10 @@
 
     bindOpenButton(toggleButton, toggleRibbon);
     bindOpenButton(chatButton, openPanel);
+    if (callButton) bindOpenButton(callButton, openRetellVoiceCall);
     closeButton.addEventListener("click", closePanel);
     closeButton.addEventListener("touchend", closePanel, { passive: false });
+    panel.querySelectorAll("[data-kx-retell-call='true']").forEach((el) => bindOpenButton(el, openRetellVoiceCall));
 
     clearButton.addEventListener("click", function () {
       state.history = [];
@@ -849,6 +956,7 @@ lead: Object.assign({}, state.lead),
 
     window.KairoxChatWidget = {
       open: openPanel,
+      openCall: openRetellVoiceCall,
       close: closePanel,
       toggleRibbon,
       expandRibbon,
