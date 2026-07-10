@@ -210,4 +210,14 @@
       <image:title>AI Automation Solutions UAE | Sales, Support &amp; Workflow Agents</image:title>
     </image:image>
   </url>
+  <url>
+    <loc>https://agentevo.online/trainings.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://agentevo.online/sales-presentations.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
 </urlset>

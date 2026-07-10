@@ -79,3 +79,10 @@ The site includes an English/Arabic language selector, RTL layout support, Arabi
 Webhook: `https://molly-preestival-irina.ngrok-free.app/webhook/kairox`
 
 The frontend sends form submissions as POST parameters and as query parameters for easy mapping in n8n Webhook nodes. Configure your n8n workflow to send the received data to `kairoxly@gmail.com`.
+
+
+## v54 Feature Additions
+- New Trainings feature with Documents and Videos.
+- New Sales Presentations for Prospects feature.
+- New pages: `trainings.html` and `sales-presentations.html`.
+- Central navigation/footer solution links are controlled through `assets/js/kairox-settings.js`.

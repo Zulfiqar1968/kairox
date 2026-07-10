@@ -9,7 +9,7 @@
 - Workflow automation UAE
 - WhatsApp AI agent UAE
 - AI receptionist UAE
-- AI sales agent UAE
+- AI sales automation UAE
 - AI customer support agent UAE
 
 ## Local SEO keywords
