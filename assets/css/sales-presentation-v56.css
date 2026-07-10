@@ -1,0 +1,241 @@
+/* =========================================================
+   KAIROX V56 — Sales presentation page based on sales deck
+   ========================================================= */
+
+.kx-deck-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 110px 0 72px;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(201,164,74,.14), transparent 30%),
+    radial-gradient(circle at 90% 8%, rgba(15,118,110,.13), transparent 28%),
+    linear-gradient(135deg, #FFFBF1 0%, #F7FBFA 55%, #FFFFFF 100%);
+}
+
+.kx-deck-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 0 42%, rgba(201,164,74,.09) 42% 43%, transparent 43%),
+    radial-gradient(circle at 0 0, rgba(4,30,43,.05) 0 1px, transparent 1px 100%);
+  background-size: auto, 22px 22px;
+  opacity: .9;
+  pointer-events: none;
+}
+
+.kx-deck-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.kx-deck-preview-stack {
+  position: relative;
+  min-height: 520px;
+}
+
+.kx-deck-preview-card {
+  position: absolute;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(201,164,74,.28);
+  box-shadow: 0 30px 80px rgba(4,30,43,.16);
+}
+
+.kx-deck-preview-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.kx-deck-preview-card.is-main {
+  width: 72%;
+  right: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.kx-deck-preview-card.is-left {
+  width: 50%;
+  left: 0;
+  top: 110px;
+  z-index: 2;
+  transform: rotate(-4deg);
+}
+
+.kx-deck-preview-card.is-bottom {
+  width: 46%;
+  right: 12%;
+  bottom: 0;
+  z-index: 1;
+  transform: rotate(3deg);
+}
+
+.kx-deck-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.kx-deck-metric {
+  border: 1px solid rgba(15,118,110,.15);
+  background: rgba(255,255,255,.78);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 16px 35px rgba(4,30,43,.06);
+}
+
+.kx-deck-metric strong {
+  display: block;
+  color: #07353D;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.kx-deck-metric span {
+  display: block;
+  margin-top: 6px;
+  color: rgba(4,30,43,.68);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kx-deck-section-card {
+  height: 100%;
+  border: 1px solid rgba(201,164,74,.20);
+  border-radius: 24px;
+  background: #fff;
+  padding: 24px;
+  box-shadow: 0 18px 45px rgba(4,30,43,.07);
+}
+
+.kx-deck-section-card .slide-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #07353D;
+  color: #F4C95D;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.kx-deck-thumb {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(201,164,74,.25);
+  background: #FFFBF1;
+  box-shadow: 0 20px 55px rgba(4,30,43,.10);
+}
+
+.kx-deck-thumb img {
+  width: 100%;
+  display: block;
+}
+
+.kx-deck-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kx-deck-gallery a {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(201,164,74,.22);
+  background: #fff;
+  box-shadow: 0 14px 32px rgba(4,30,43,.07);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.kx-deck-gallery a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(4,30,43,.12);
+}
+
+.kx-deck-gallery img {
+  width: 100%;
+  display: block;
+}
+
+.kx-slide-label {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 850;
+  color: #07353D;
+  background: #fff;
+}
+
+.kx-sales-journey {
+  counter-reset: step;
+  display: grid;
+  gap: 12px;
+}
+
+.kx-sales-journey .journey-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(15,118,110,.14);
+  border-radius: 18px;
+  background: rgba(255,255,255,.78);
+}
+
+.kx-sales-journey strong {
+  color: #07353D;
+}
+
+.kx-sales-journey span {
+  color: rgba(4,30,43,.68);
+}
+
+@media (max-width: 991px) {
+  .kx-deck-preview-stack {
+    min-height: 420px;
+    margin-top: 30px;
+  }
+
+  .kx-deck-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kx-deck-metric-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .kx-deck-hero {
+    padding-top: 84px;
+  }
+
+  .kx-deck-preview-stack {
+    min-height: auto;
+  }
+
+  .kx-deck-preview-card,
+  .kx-deck-preview-card.is-main,
+  .kx-deck-preview-card.is-left,
+  .kx-deck-preview-card.is-bottom {
+    position: relative;
+    width: 100%;
+    inset: auto;
+    transform: none;
+    margin-bottom: 14px;
+  }
+
+  .kx-deck-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .kx-sales-journey .journey-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,342 @@
+/* =========================================================
+   KAIROX V62 — 11-section customer web presentation
+   ========================================================= */
+
+.kx-story-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 114px 0 76px;
+  background:
+    radial-gradient(circle at 7% 10%, rgba(201,164,74,.15), transparent 32%),
+    radial-gradient(circle at 88% 4%, rgba(15,118,110,.15), transparent 28%),
+    linear-gradient(135deg, #FFFBF1 0%, #F7FBFA 58%, #FFFFFF 100%);
+}
+
+.kx-story-hero::before,
+.kx-story-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0 46%, rgba(201,164,74,.10) 46% 47%, transparent 47%),
+    radial-gradient(circle at 0 0, rgba(4,30,43,.055) 0 1px, transparent 1px 100%);
+  background-size: auto, 24px 24px;
+  pointer-events: none;
+}
+
+.kx-story-hero .container,
+.kx-story-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.kx-story-panel {
+  border: 1px solid rgba(15,118,110,.16);
+  background: rgba(255,255,255,.86);
+  border-radius: 30px;
+  padding: 28px;
+  box-shadow: 0 28px 70px rgba(4,30,43,.11);
+}
+
+.kx-story-section {
+  position: relative;
+  overflow: hidden;
+  padding: 88px 0;
+}
+
+.kx-story-section.alt {
+  background: linear-gradient(135deg, #FFFBF1, #F7FBFA);
+}
+
+.kx-story-section.dark {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(201,164,74,.12), transparent 32%),
+    linear-gradient(135deg, #07353D, #041E2B);
+  color: #fff;
+}
+
+.kx-story-section.dark .kx-heading,
+.kx-story-section.dark h2,
+.kx-story-section.dark h3,
+.kx-story-section.dark p,
+.kx-story-section.dark .kx-lead {
+  color: #fff;
+}
+
+.kx-section-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: #07353D;
+  color: #F4C95D;
+  font-weight: 950;
+  margin-bottom: 16px;
+  box-shadow: 0 14px 30px rgba(4,30,43,.14);
+}
+
+.dark .kx-section-no {
+  background: #F4C95D;
+  color: #07353D;
+}
+
+.kx-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.kx-stat {
+  border: 1px solid rgba(15,118,110,.15);
+  background: rgba(255,255,255,.88);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.kx-stat strong {
+  display: block;
+  color: #07353D;
+  font-size: 29px;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+.kx-stat span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(4,30,43,.68);
+  font-weight: 760;
+  font-size: 13px;
+}
+
+.kx-story-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kx-story-card-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kx-story-card {
+  height: 100%;
+  border: 1px solid rgba(201,164,74,.20);
+  background: #fff;
+  border-radius: 26px;
+  padding: 24px;
+  box-shadow: 0 18px 44px rgba(4,30,43,.07);
+}
+
+.kx-story-card .icon-badge {
+  margin-bottom: 18px;
+}
+
+.kx-story-card h3 {
+  color: #07353D;
+  margin-bottom: 10px;
+}
+
+.kx-story-card p {
+  color: rgba(4,30,43,.70);
+  margin-bottom: 0;
+}
+
+.kx-story-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kx-story-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(4,30,43,.08);
+  color: rgba(4,30,43,.74);
+}
+
+.kx-story-list li:last-child {
+  border-bottom: 0;
+}
+
+.kx-story-list i {
+  color: #0F766E;
+  margin-top: 2px;
+}
+
+.dark .kx-story-list li {
+  color: rgba(255,255,255,.82);
+  border-color: rgba(255,255,255,.12);
+}
+
+.dark .kx-story-list i {
+  color: #F4C95D;
+}
+
+.kx-cost-box {
+  border-radius: 26px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(15,118,110,.15);
+  box-shadow: 0 24px 60px rgba(4,30,43,.10);
+}
+
+.kx-cost-head {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #07353D, #041E2B);
+  color: #fff;
+}
+
+.kx-cost-row {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr .8fr;
+  gap: 14px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(4,30,43,.08);
+}
+
+.kx-cost-row:last-child {
+  border-bottom: 0;
+}
+
+.kx-cost-row strong {
+  color: #07353D;
+}
+
+.kx-price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kx-price-card {
+  border: 1px solid rgba(201,164,74,.24);
+  border-radius: 28px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(4,30,43,.08);
+  height: 100%;
+}
+
+.kx-price-card.featured {
+  transform: translateY(-10px);
+  border-color: rgba(201,164,74,.45);
+  box-shadow: 0 30px 70px rgba(4,30,43,.13);
+}
+
+.kx-price-head {
+  padding: 22px;
+  background: #07353D;
+  color: #fff;
+}
+
+.kx-price-card.featured .kx-price-head {
+  background: linear-gradient(135deg, #0F766E, #07353D);
+}
+
+.kx-price-body {
+  padding: 22px;
+}
+
+.kx-price {
+  font-size: 28px;
+  color: #07353D;
+  font-weight: 950;
+  letter-spacing: -.03em;
+}
+
+.kx-phase-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.kx-phase {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 18px;
+  border: 1px solid rgba(15,118,110,.14);
+  background: rgba(255,255,255,.86);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.kx-phase strong {
+  color: #07353D;
+}
+
+.kx-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 18px;
+}
+
+.kx-faq-card {
+  border: 1px solid rgba(201,164,74,.20);
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 16px 38px rgba(4,30,43,.06);
+}
+
+.kx-faq-card h3 {
+  color: #07353D;
+  font-size: 20px;
+}
+
+.kx-cta-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.kx-cta-step {
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.08);
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.kx-cta-step strong {
+  display: block;
+  color: #F4C95D;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 991px) {
+  .kx-story-card-grid,
+  .kx-story-card-grid.two,
+  .kx-price-grid,
+  .kx-faq-grid,
+  .kx-cta-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .kx-price-card.featured {
+    transform: none;
+  }
+
+  .kx-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kx-phase,
+  .kx-cost-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .kx-story-hero {
+    padding-top: 84px;
+  }
+
+  .kx-story-section {
+    padding: 68px 0;
+  }
+}

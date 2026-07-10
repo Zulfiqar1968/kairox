@@ -1,0 +1,187 @@
+/* =========================================================
+   KAIROX V63 — Premium ribbon / call / chat polish
+   Positions and functionality intentionally unchanged.
+   ========================================================= */
+
+/* Smoother motion only; no position, size or transform values changed. */
+.kx-floating-actions {
+  transition:
+    transform .34s cubic-bezier(.22, 1, .36, 1),
+    opacity .22s ease,
+    filter .22s ease !important;
+  filter: drop-shadow(0 22px 34px rgba(4, 30, 43, .18)) !important;
+}
+
+/* Premium connected frame with rounded left corners. */
+.kx-action-ribbon {
+  background:
+    radial-gradient(circle at 20% 12%, rgba(244, 201, 93, .16), transparent 34%),
+    linear-gradient(165deg, rgba(4, 39, 50, .99) 0%, rgba(3, 26, 35, .99) 52%, rgba(6, 69, 73, .97) 100%) !important;
+  border: 1px solid rgba(244, 201, 93, .34) !important;
+  border-right: 0 !important;
+  border-left-color: rgba(244, 201, 93, .46) !important;
+  border-radius: 26px 0 0 26px !important;
+  box-shadow:
+    0 24px 52px rgba(4, 30, 43, .24),
+    0 8px 18px rgba(4, 30, 43, .18),
+    inset 1px 0 0 rgba(255, 255, 255, .11),
+    inset 0 1px 0 rgba(255, 255, 255, .16),
+    inset 0 -1px 0 rgba(244, 201, 93, .12) !important;
+  transition:
+    opacity .26s ease,
+    visibility .26s ease,
+    box-shadow .26s ease,
+    filter .26s ease !important;
+}
+
+/* Keep the no-gap connector but upgrade its surface so it blends with the new frame. */
+.kx-floating-actions::after {
+  background:
+    linear-gradient(165deg, rgba(4, 39, 50, .99) 0%, rgba(3, 26, 35, .99) 52%, rgba(6, 69, 73, .97) 100%) !important;
+  border-top: 1px solid rgba(244, 201, 93, .24) !important;
+  border-bottom: 1px solid rgba(244, 201, 93, .24) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    inset 0 -1px 0 rgba(0, 0, 0, .16) !important;
+}
+
+/* Expand/collapse tab: smoother, more refined, still in the same place. */
+.kx-ribbon-toggle {
+  background:
+    radial-gradient(circle at 28% 18%, rgba(244, 201, 93, .22), transparent 34%),
+    linear-gradient(165deg, #07353D 0%, #041E2B 55%, #052B35 100%) !important;
+  border: 1px solid rgba(244, 201, 93, .48) !important;
+  border-right: 0 !important;
+  border-radius: 24px 0 0 24px !important;
+  box-shadow:
+    0 18px 36px rgba(4, 30, 43, .23),
+    0 8px 16px rgba(4, 30, 43, .16),
+    inset 1px 0 0 rgba(255, 255, 255, .16),
+    inset 0 1px 0 rgba(255, 255, 255, .16),
+    inset 0 -1px 0 rgba(244, 201, 93, .14) !important;
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    filter .22s ease !important;
+}
+
+.kx-ribbon-toggle:hover,
+.kx-ribbon-toggle:focus-visible {
+  border-color: rgba(244, 201, 93, .72) !important;
+  box-shadow:
+    0 22px 42px rgba(4, 30, 43, .28),
+    0 10px 20px rgba(4, 30, 43, .18),
+    0 0 0 3px rgba(244, 201, 93, .12),
+    inset 1px 0 0 rgba(255, 255, 255, .18),
+    inset 0 1px 0 rgba(255, 255, 255, .18) !important;
+  filter: saturate(1.08) brightness(1.02) !important;
+}
+
+/* Arrow icon styling without changing tab position. */
+.kx-ribbon-toggle-inner {
+  color: #F8E5A6 !important;
+  text-shadow: 0 2px 10px rgba(244, 201, 93, .24) !important;
+}
+
+.kx-ribbon-toggle i {
+  font-size: 1rem !important;
+  line-height: 1 !important;
+}
+
+/* Call/chat button frames: premium border shades and smoother surfaces. */
+.kx-action-ribbon .kx-float-btn,
+.kx-action-ribbon .kx-float-call,
+.kx-action-ribbon .kx-float-chat {
+  border: 1px solid rgba(244, 201, 93, .32) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, .18), transparent 32%),
+    linear-gradient(155deg, rgba(255, 255, 255, .12) 0%, rgba(255, 255, 255, .055) 48%, rgba(244, 201, 93, .075) 100%) !important;
+  box-shadow:
+    0 15px 26px rgba(0, 0, 0, .16),
+    0 5px 12px rgba(0, 0, 0, .14),
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    inset 0 -1px 0 rgba(0, 0, 0, .18) !important;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease,
+    filter .22s ease !important;
+}
+
+/* Subtle distinction: phone feels high-value, chat feels assistant-led. */
+.kx-action-ribbon .kx-float-call {
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, .20), transparent 32%),
+    linear-gradient(155deg, rgba(15, 118, 110, .38) 0%, rgba(7, 53, 61, .78) 55%, rgba(244, 201, 93, .16) 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, .20), transparent 32%),
+    linear-gradient(155deg, rgba(9, 73, 86, .48) 0%, rgba(4, 30, 43, .80) 55%, rgba(15, 118, 110, .25) 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible {
+  border-color: rgba(244, 201, 93, .70) !important;
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, .22),
+    0 7px 15px rgba(0, 0, 0, .16),
+    0 0 0 3px rgba(244, 201, 93, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .28),
+    inset 0 -1px 0 rgba(0, 0, 0, .20) !important;
+  filter: saturate(1.10) brightness(1.045) !important;
+}
+
+/* More polished icons, same containers and same layout. */
+.kx-float-icon {
+  display: grid !important;
+  place-items: center !important;
+  color: #F9E7A8 !important;
+  text-shadow:
+    0 2px 12px rgba(244, 201, 93, .24),
+    0 1px 2px rgba(0, 0, 0, .18) !important;
+}
+
+.kx-float-icon i {
+  font-size: 1.28rem !important;
+  line-height: 1 !important;
+}
+
+.kx-float-label {
+  color: rgba(255, 255, 255, .92) !important;
+  font-weight: 850 !important;
+  letter-spacing: .02em !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .28) !important;
+}
+
+/* Chat window / voice panel frames get subtle premium shade without moving them. */
+.kx-chat-window,
+.kx-direct-call-panel {
+  border: 1px solid rgba(244, 201, 93, .20) !important;
+  box-shadow:
+    0 30px 80px rgba(4, 30, 43, .22),
+    0 14px 36px rgba(4, 30, 43, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .18) !important;
+}
+
+.kx-chat-header {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(244, 201, 93, .12), transparent 36%),
+    linear-gradient(135deg, #07353D 0%, #041E2B 70%, #052B35 100%) !important;
+  border-bottom: 1px solid rgba(244, 201, 93, .18) !important;
+}
+
+/* Accessibility: retain polish without motion for users who prefer it. */
+@media (prefers-reduced-motion: reduce) {
+  .kx-floating-actions,
+  .kx-action-ribbon,
+  .kx-ribbon-toggle,
+  .kx-action-ribbon .kx-float-btn {
+    transition: none !important;
+  }
+}

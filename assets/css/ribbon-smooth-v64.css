@@ -1,0 +1,92 @@
+
+/* Kairox V64 - smoother ribbon and button finish */
+
+/* keep position/functionality intact; only visual cleanup */
+.kx-ribbon-toggle,
+.kx-ribbon-toggle::before,
+.kx-ribbon-toggle::after {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle-inner {
+  background: linear-gradient(180deg, #F5E6A8 0%, #DBB85F 56%, #B88A2F 100%) !important;
+  border: 0 !important;
+  box-shadow: -8px 12px 28px rgba(4,30,43,.20) !important;
+  outline: none !important;
+}
+
+.kx-ribbon-toggle-inner::before,
+.kx-ribbon-toggle-inner::after {
+  display: none !important;
+  content: none !important;
+}
+
+.kx-ribbon-toggle:hover .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:focus-visible .kx-ribbon-toggle-inner,
+.kx-ribbon-toggle:active .kx-ribbon-toggle-inner {
+  box-shadow: -10px 14px 30px rgba(4,30,43,.22) !important;
+  filter: saturate(1.03) brightness(1.02) !important;
+}
+
+.kx-ribbon-toggle i {
+  color: #274754 !important;
+  text-shadow: none !important;
+}
+
+.kx-action-ribbon {
+  border: 0 !important;
+  background:
+    radial-gradient(circle at 92% 88%, rgba(15,118,110,.28), transparent 44%),
+    linear-gradient(160deg, rgba(3,26,35,.985) 0%, rgba(4,30,43,.985) 52%, rgba(11,93,95,.95) 100%) !important;
+  box-shadow: -16px 22px 50px rgba(4,30,43,.22) !important;
+}
+
+.kx-action-ribbon::before,
+.kx-action-ribbon::after,
+.kx-floating-actions::before,
+.kx-floating-actions::after,
+.kx-ribbon-buttons::before,
+.kx-ribbon-buttons::after {
+  display: none !important;
+  content: none !important;
+}
+
+.kx-action-ribbon .kx-float-btn {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: 0 10px 24px rgba(4,30,43,.16) !important;
+}
+
+.kx-action-ribbon .kx-float-btn::before,
+.kx-action-ribbon .kx-float-btn::after,
+.kx-action-ribbon .kx-float-call::before,
+.kx-action-ribbon .kx-float-call::after,
+.kx-action-ribbon .kx-float-chat::before,
+.kx-action-ribbon .kx-float-chat::after {
+  display: none !important;
+  content: none !important;
+}
+
+.kx-action-ribbon .kx-float-btn:hover,
+.kx-action-ribbon .kx-float-btn:focus-visible,
+.kx-action-ribbon .kx-float-btn.active {
+  box-shadow: 0 12px 26px rgba(4,30,43,.18) !important;
+  filter: saturate(1.03) brightness(1.02) !important;
+}
+
+.kx-action-ribbon .kx-float-call {
+  background: linear-gradient(135deg, #F5E4A4 0%, #D8B45A 58%, #B5862A 100%) !important;
+}
+
+.kx-action-ribbon .kx-float-chat {
+  background: linear-gradient(135deg, #0E7A73 0%, #0B6664 100%) !important;
+}
+
+.kx-chat-window,
+.kx-direct-call-panel {
+  border: 0 !important;
+  box-shadow: 0 24px 60px rgba(4,30,43,.20) !important;
+}

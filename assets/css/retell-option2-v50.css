@@ -1,0 +1,9 @@
+/* =========================================================
+   KAIROX RETELL OPTION 2 RESOLVED V50
+   Same-origin /api/retell-web-call endpoint is used first to avoid CORS.
+   ========================================================= */
+
+/* =========================================================
+   KAIROX RETELL DV WEBHOOK V51
+   Frontend calls the supplied n8n /webhook/retell_DV endpoint for access_token.
+   ========================================================= */

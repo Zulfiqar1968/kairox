@@ -653,3 +653,225 @@ iframe[src*="agent.retellai.com" i] {
     width: 7px !important;
   }
 }
+
+/* =========================================================
+   KAIROX RETELL MINIMAL PARAMS V47
+   Retell receives only: name, phone, email, company, sessionId.
+   ========================================================= */
+
+/* =========================================================
+   KAIROX RETELL WEB SDK V48
+   Uses Retell Create Web Call + Retell Web SDK, not Orb query params.
+   ========================================================= */
+
+.kx-direct-call-body {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  padding: 18px !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(15,118,110,.12), transparent 34%),
+    linear-gradient(180deg, #ffffff, #F7FBFA) !important;
+}
+
+.kx-direct-call-status {
+  border: 1px solid rgba(15,118,110,.16) !important;
+  border-radius: 14px !important;
+  padding: 12px !important;
+  background: rgba(255,255,255,.84) !important;
+  color: rgba(4,30,43,.78) !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  text-align: center !important;
+}
+
+.kx-direct-call-status.is-error {
+  border-color: rgba(180,35,24,.24) !important;
+  background: rgba(254,243,242,.92) !important;
+  color: #B42318 !important;
+}
+
+.kx-direct-call-primary,
+.kx-direct-call-end {
+  width: 100% !important;
+  min-height: 42px !important;
+  border-radius: 999px !important;
+  font-weight: 850 !important;
+  cursor: pointer !important;
+}
+
+.kx-direct-call-primary {
+  border: 0 !important;
+  background: linear-gradient(135deg, #0F766E, #0A4F49) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px rgba(15,118,110,.22) !important;
+}
+
+.kx-direct-call-end {
+  border: 1px solid rgba(4,30,43,.12) !important;
+  background: #ffffff !important;
+  color: #07353D !important;
+}
+
+.kx-direct-call-help {
+  color: rgba(4,30,43,.58) !important;
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+}
+
+/* =========================================================
+   KAIROX RETELL ENDPOINT/CORS V49
+   Uses a simple text/plain backend request to reduce CORS preflight issues.
+   ========================================================= */
+
+/* =========================================================
+   KAIROX RETELL N8N FORM FIELDS V52
+   Retell access-token webhook receives separate form-urlencoded fields.
+   ========================================================= */
+
+/* =========================================================
+   KAIROX V53 — Retell voice loading + central settings
+   ========================================================= */
+
+.kx-voice-loading {
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 34px !important;
+  margin-bottom: 2px !important;
+}
+
+.kx-direct-call-panel.is-loading .kx-voice-loading {
+  display: flex !important;
+}
+
+.kx-voice-loading span {
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #0F766E, #C9A44A) !important;
+  animation: kxVoicePulse 0.82s infinite ease-in-out !important;
+  box-shadow: 0 0 18px rgba(15,118,110,.28) !important;
+}
+
+.kx-voice-loading span:nth-child(2) {
+  animation-delay: .12s !important;
+}
+
+.kx-voice-loading span:nth-child(3) {
+  animation-delay: .24s !important;
+}
+
+@keyframes kxVoicePulse {
+  0%, 80%, 100% {
+    opacity: .36;
+    transform: scale(.74);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.kx-direct-call-primary[disabled],
+.kx-direct-call-end[disabled] {
+  opacity: .62 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(.08) !important;
+}
+
+.kx-direct-call-panel.is-loading .kx-direct-call-primary {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.kx-direct-call-panel.is-loading .kx-direct-call-primary::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent) !important;
+  transform: translateX(-100%) !important;
+  animation: kxButtonShimmer 1.2s infinite !important;
+}
+
+@keyframes kxButtonShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* =========================================================
+   KAIROX V54 — Trainings and Sales Presentation Features
+   ========================================================= */
+
+.kx-feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.kx-feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(15,118,110,.16);
+  background: rgba(255,255,255,.82);
+  color: #07353D;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.section-dark .kx-feature-pill {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.18);
+  color: #fff;
+}
+
+.kx-feature-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kx-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: rgba(4,30,43,.76);
+}
+
+.kx-feature-list li i {
+  color: #0F766E;
+  margin-top: 2px;
+}
+
+.kx-feature-band {
+  border: 1px solid rgba(15,118,110,.13);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(15,118,110,.10), transparent 32%),
+    linear-gradient(135deg, #ffffff, #F7FBFA);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 24px 55px rgba(4,30,43,.08);
+}
+
+.kx-doc-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 767px) {
+  .kx-doc-video-grid {
+    grid-template-columns: 1fr;
+  }
+}

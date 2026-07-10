@@ -1,21 +1,33 @@
 (function () {
   "use strict";
 
-  console.log("[Kairox] chatbot loaded: v45 ribbon-gapless");
+  console.log("[Kairox] chatbot loaded: v55 root-relative-paths");
 
   const defaults = {
     brand: "Kairox AI Assistant",
     webhook: "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/leads",
-    callUrl: "https://agent.retellai.com/orb/agent_5ec6dc37c1772b2f9adc74074b?token=399ed754afa22e7461bd35ae4761eecb",
-    logo: "assets/img/kairox-mark.svg"
+    retellWebCallEndpoint: "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/retell_DV",
+    retellAgentId: "agent_5ec6dc37c1772b2f9adc74074b",
+    retellAgentVersion: "28",
+    retellSdkUrl: "https://esm.sh/retell-client-js-sdk@2.0.8",
+    logo: "/assets/img/kairox-mark.svg"
   };
 
-  const config = Object.assign({}, defaults, window.KairoxChatConfig || {});
-  config.callUrl = "https://agent.retellai.com/orb/agent_5ec6dc37c1772b2f9adc74074b?token=399ed754afa22e7461bd35ae4761eecb";
-  config.logo = config.logo && config.logo.includes("kairox-logo.svg") ? "assets/img/kairox-mark.svg" : config.logo;
+  const sharedSettings = window.KairoxSettings || {};
+  const sharedChatConfig = {
+    webhook: sharedSettings.webhooks && sharedSettings.webhooks.leads ? sharedSettings.webhooks.leads : defaults.webhook,
+    brand: sharedSettings.brand && sharedSettings.brand.assistantName ? sharedSettings.brand.assistantName : defaults.brand,
+    logo: sharedSettings.brand && sharedSettings.brand.logoMark ? sharedSettings.brand.logoMark : defaults.logo,
+    retellWebCallEndpoint: sharedSettings.webhooks && sharedSettings.webhooks.retellAccessToken ? sharedSettings.webhooks.retellAccessToken : defaults.retellWebCallEndpoint,
+    retellAgentId: sharedSettings.retell && sharedSettings.retell.agentId ? sharedSettings.retell.agentId : defaults.retellAgentId,
+    retellAgentVersion: sharedSettings.retell && sharedSettings.retell.agentVersion ? sharedSettings.retell.agentVersion : defaults.retellAgentVersion,
+    retellSdkUrl: sharedSettings.retell && sharedSettings.retell.sdkUrl ? sharedSettings.retell.sdkUrl : defaults.retellSdkUrl
+  };
+  const config = Object.assign({}, defaults, sharedChatConfig, window.KairoxChatConfig || {});
+  config.logo = config.logo && config.logo.includes("kairox-logo.svg") ? "/assets/img/kairox-mark.svg" : config.logo;
 
   const sessionKey = "kx_session";
-  const historyKey = "kx_chat_history_v45";
+  const historyKey = "kx_chat_history_v55";
   localStorage.removeItem(sessionKey);
   localStorage.removeItem(historyKey);
 
@@ -34,7 +46,11 @@
       phone: "",
       email: "",
       company: ""
-    }
+    },
+    retellClient: null,
+    isVoiceCallActive: false,
+    isVoiceCallStarting: false,
+    currentVoiceCallPromise: null
   };
 
   function escapeHtml(text) {
@@ -70,27 +86,8 @@
     return state.leadStep === "complete";
   }
 
-  function leadVariables() {
-    const lead = state.lead || {};
-    return {
-      name: String(lead.name || ""),
-      phone: String(lead.phone || ""),
-      email: String(lead.email || ""),
-      company: String(lead.company || ""),
-      sessionId: String(sessionId || ""),
-      page: String(window.location.href || ""),
-      source: "kairox-website-chat",
-      channel: "website"
-    };
-  }
-
-  function buildRetellUrl() {
-    const url = new URL(config.callUrl || "https://agent.retellai.com/orb/agent_5ec6dc37c1772b2f9adc74074b?token=399ed754afa22e7461bd35ae4761eecb", window.location.href);
-    const variables = leadVariables();
-    Object.entries(variables).forEach(([key, value]) => {
-      if (value) url.searchParams.set(key, value);
-    });
-    return url.toString();
+  function cleanLeadValue(value) {
+    return String(value || "").trim();
   }
 
   function extractReply(data) {
@@ -144,13 +141,11 @@
       </button>
       <div class="kx-action-ribbon">
         <div class="kx-ribbon-buttons">
-          <a class="kx-float-btn kx-float-call" href="${escapeHtml(config.callUrl)}" data-kx-call="true" data-kx-retell-call="true" aria-label="Talk to Zara voice agent">
+          <a class="kx-float-btn kx-float-call" href="#voice-call" data-kx-call="true" data-kx-retell-call="true" aria-label="Talk to Zara voice agent">
             <span class="kx-float-icon"><i class="bi bi-telephone-outbound-fill"></i></span>
-            <span class="kx-float-label">Call</span>
           </a>
           <button class="kx-float-btn kx-float-chat" type="button" aria-label="Open Kairox chat assistant">
             <span class="kx-float-icon"><i class="bi bi-chat-dots-fill"></i></span>
-            <span class="kx-float-label">Chat</span>
           </button>
         </div>
       </div>
@@ -484,7 +479,7 @@
         postLeadCapture(action);
 
         if (action === "call") {
-          openDirectVoiceCall();
+          startRetellWebCall();
         } else {
           addMessage("assistant", "Thank you, " + firstName() + ". How can I help you today?");
           input.focus();
@@ -671,6 +666,32 @@
       }
     }
 
+    function leadDynamicVariables() {
+      const lead = state.lead || {};
+      return {
+        name: String(lead.name || ""),
+        phone: String(lead.phone || ""),
+        email: String(lead.email || ""),
+        company: String(lead.company || ""),
+        sessionId: String(sessionId || "")
+      };
+    }
+
+    async function ensureRetellWebClient() {
+      if (state.retellClient) return state.retellClient;
+
+      const sdkUrl = config.retellSdkUrl || "https://esm.sh/retell-client-js-sdk@2.0.8";
+      const sdk = await import(sdkUrl);
+      const RetellWebClient = sdk.RetellWebClient || (sdk.default && sdk.default.RetellWebClient);
+
+      if (!RetellWebClient) {
+        throw new Error("RetellWebClient was not exported by the SDK module.");
+      }
+
+      state.retellClient = new RetellWebClient();
+      return state.retellClient;
+    }
+
     function ensureDirectCallPanel() {
       let callPanel = panel.querySelector("[data-kx-direct-call-panel='true']");
       if (callPanel) return callPanel;
@@ -684,34 +705,186 @@
           <div><strong>Talk to Zara</strong><span>Secure AI voice call</span></div>
           <button type="button" class="kx-direct-call-close" aria-label="Close voice call">×</button>
         </div>
-        <iframe class="kx-direct-call-frame" title="Talk to Zara voice agent" allow="microphone; autoplay; clipboard-read; clipboard-write"></iframe>
-        <div class="kx-direct-call-fallback">
-          <span>If the call does not load inside this window, open the secure call page.</span>
-          <a class="kx-direct-call-open" target="_blank" rel="noopener">Open voice call</a>
+        <div class="kx-direct-call-body">
+          <div class="kx-voice-loading" data-kx-voice-loader aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="kx-direct-call-status" data-kx-voice-status>Complete the form, then allow microphone access when prompted.</div>
+          <button type="button" class="kx-direct-call-primary" data-kx-voice-start>Start voice call</button>
+          <button type="button" class="kx-direct-call-end" data-kx-voice-end>End call</button>
+          <div class="kx-direct-call-help">The call uses your n8n Retell access-token webhook. Form values are sent as separate fields.</div>
         </div>
       `;
+
       panel.appendChild(callPanel);
+
       const closeVoice = callPanel.querySelector(".kx-direct-call-close");
+      const startVoice = callPanel.querySelector("[data-kx-voice-start]");
+      const endVoice = callPanel.querySelector("[data-kx-voice-end]");
+
       if (closeVoice) closeVoice.addEventListener("click", closeDirectCallPanel);
+      if (startVoice) startVoice.addEventListener("click", startRetellWebCall);
+      if (endVoice) endVoice.addEventListener("click", stopRetellWebCall);
+
       return callPanel;
     }
 
-    function closeDirectCallPanel() {
+    function setVoiceLoading(isLoading, label) {
+      const callPanel = ensureDirectCallPanel();
+      const loader = callPanel.querySelector("[data-kx-voice-loader]");
+      const startButton = callPanel.querySelector("[data-kx-voice-start]");
+      const endButton = callPanel.querySelector("[data-kx-voice-end]");
+
+      callPanel.classList.toggle("is-loading", !!isLoading);
+      if (loader) loader.setAttribute("aria-hidden", isLoading ? "false" : "true");
+
+      if (startButton) {
+        startButton.disabled = !!isLoading || !!state.isVoiceCallActive;
+        startButton.textContent = isLoading ? (label || "Preparing...") : (state.isVoiceCallActive ? "Call connected" : "Start voice call");
+      }
+
+      if (endButton) {
+        endButton.disabled = !isLoading && !state.isVoiceCallActive;
+      }
+    }
+
+    function setVoiceStatus(message, isError) {
+      const callPanel = ensureDirectCallPanel();
+      const status = callPanel.querySelector("[data-kx-voice-status]");
+      if (status) {
+        status.textContent = message;
+        status.classList.toggle("is-error", !!isError);
+      }
+    }
+
+    function openVoicePanel() {
+      openPanel();
+
+      const callPanel = ensureDirectCallPanel();
+      callPanel.classList.add("open");
+      callPanel.setAttribute("aria-hidden", "false");
+      panel.classList.add("kx-direct-call-mode");
+
+      if (messages) messages.style.display = "none";
+      if (form) form.style.display = "none";
+      if (quickArea) quickArea.style.display = "none";
+      setVoiceLoading(state.isVoiceCallStarting, state.isVoiceCallStarting ? "Preparing..." : "");
+    }
+
+    function closeDirectCallPanel(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
       const callPanel = panel.querySelector("[data-kx-direct-call-panel='true']");
       if (callPanel) {
         callPanel.classList.remove("open");
         callPanel.setAttribute("aria-hidden", "true");
       }
+
       panel.classList.remove("kx-direct-call-mode");
+
       if (messages) messages.style.removeProperty("display");
       if (form) form.style.removeProperty("display");
       if (quickArea) quickArea.style.removeProperty("display");
+
       updateLeadUi();
     }
 
-    function openDirectVoiceCall() {
+    async function createRetellWebCall() {
+      const variables = leadDynamicVariables();
+      const endpoint = config.retellWebCallEndpoint || "https://workflows-n8nrunnerpostgresollama-cc30a1-187-127-191-113.sslip.io/webhook/retell_DV";
+
+      const formPayload = new URLSearchParams();
+      formPayload.set("agent_id", config.retellAgentId || "agent_5ec6dc37c1772b2f9adc74074b");
+      formPayload.set("agent_version", String(config.retellAgentVersion || "28"));
+      formPayload.set("name", variables.name);
+      formPayload.set("phone", variables.phone);
+      formPayload.set("email", variables.email);
+      formPayload.set("company", variables.company);
+      formPayload.set("sessionId", variables.sessionId);
+
+      console.log("[Kairox] Requesting Retell access_token from n8n webhook as separate form fields:", endpoint, {
+        agent_id: config.retellAgentId || "agent_5ec6dc37c1772b2f9adc74074b",
+        agent_version: String(config.retellAgentVersion || "28"),
+        name: variables.name,
+        phone: variables.phone,
+        email: variables.email,
+        company: variables.company,
+        sessionId: variables.sessionId
+      });
+
+      let response;
+      try {
+        response = await fetch(endpoint, {
+          method: "POST",
+          mode: "cors",
+          credentials: "omit",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Accept": "application/json, text/plain, */*"
+          },
+          body: formPayload.toString()
+        });
+      } catch (error) {
+        throw new Error(
+          "Could not reach the Retell access-token webhook. Confirm the n8n workflow is Active and the production URL is correct: " + endpoint
+        );
+      }
+
+      const text = await response.text();
+      let data = null;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = { raw: text };
+      }
+
+      if (!response.ok) {
+        throw new Error("Retell access-token webhook returned " + response.status + ": " + JSON.stringify(data).slice(0, 400));
+      }
+
+      const payload = Array.isArray(data) ? data[0] : data;
+      const accessToken = payload && (
+        payload.access_token ||
+        payload.accessToken ||
+        (payload.json && payload.json.access_token) ||
+        (payload.body && payload.body.access_token) ||
+        (payload.data && payload.data.access_token)
+      );
+
+      if (!accessToken) {
+        throw new Error("Retell access-token webhook responded, but did not return access_token. Response: " + JSON.stringify(data).slice(0, 400));
+      }
+
+      console.log("[Kairox] Retell access_token received. Separate fields sent:", variables);
+      return accessToken;
+    }
+
+    async function startRetellWebCall(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+      }
+
+      if (state.isVoiceCallStarting) {
+        openVoicePanel();
+        setVoiceStatus("Zara is already preparing your voice call...");
+        return state.currentVoiceCallPromise;
+      }
+
+      if (state.isVoiceCallActive) {
+        openVoicePanel();
+        setVoiceStatus("Voice call is already connected.");
+        setVoiceLoading(false);
+        return;
+      }
+
       if (!isLeadComplete()) {
         state.pendingAction = "call";
+        closeDirectCallPanel();
         openPanel();
         renderHistory();
         ensureLeadFormVisible();
@@ -719,20 +892,82 @@
         return;
       }
 
-      openPanel();
-      const callPanel = ensureDirectCallPanel();
-      const url = buildRetellUrl();
-      const frame = callPanel.querySelector(".kx-direct-call-frame");
-      const fallback = callPanel.querySelector(".kx-direct-call-open");
-      if (fallback) fallback.href = url;
-      if (frame && frame.getAttribute("src") !== url) frame.setAttribute("src", url);
+      openVoicePanel();
+      state.isVoiceCallStarting = true;
+      setVoiceLoading(true, "Preparing...");
+      setVoiceStatus("Preparing secure voice call with Zara...");
 
-      callPanel.classList.add("open");
-      callPanel.setAttribute("aria-hidden", "false");
-      panel.classList.add("kx-direct-call-mode");
-      if (messages) messages.style.display = "none";
-      if (form) form.style.display = "none";
-      if (quickArea) quickArea.style.display = "none";
+      state.currentVoiceCallPromise = (async () => {
+        try {
+          const client = await ensureRetellWebClient();
+          setVoiceStatus("Requesting secure access token...");
+          const accessToken = await createRetellWebCall();
+
+          setVoiceStatus("Starting voice call. Please allow microphone access when prompted.");
+
+          await client.startCall({ accessToken });
+
+          state.isVoiceCallActive = true;
+          setVoiceStatus("Voice call connected.");
+        } catch (error) {
+          console.error("[Kairox] Retell web call error", error);
+          state.isVoiceCallActive = false;
+          setVoiceStatus(error.message || "Could not start the voice call. Please check the n8n Retell access-token workflow.", true);
+        } finally {
+          state.isVoiceCallStarting = false;
+          state.currentVoiceCallPromise = null;
+          setVoiceLoading(false);
+        }
+      })();
+
+      return state.currentVoiceCallPromise;
+    }
+
+    function stopRetellWebCall(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+      }
+
+      try {
+        if (state.retellClient) state.retellClient.stopCall();
+      } catch (error) {
+        console.warn("[Kairox] Retell stop call warning", error);
+      }
+
+      state.isVoiceCallActive = false;
+      state.isVoiceCallStarting = false;
+      state.currentVoiceCallPromise = null;
+      setVoiceLoading(false);
+      setVoiceStatus("Voice call ended.");
+    }
+
+    function openDirectVoiceCall() {
+      startRetellWebCall();
+    }
+
+    function requestVoiceCall(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+      }
+
+      state.pendingAction = "call";
+      openPanel();
+
+      if (!isLeadComplete()) {
+        renderHistory();
+        ensureLeadFormVisible();
+        updateLeadFormMode();
+        const firstField = messages.querySelector("[data-kx-lead-form='true'] input");
+        if (firstField) firstField.focus();
+        return;
+      }
+
+      postLeadCapture("call");
+      startRetellWebCall();
     }
 
     function requestChatStart(event) {
@@ -741,9 +976,11 @@
         event.stopPropagation();
         if (event.stopImmediatePropagation) event.stopImmediatePropagation();
       }
+
       state.pendingAction = "chat";
       closeDirectCallPanel();
       openPanel();
+
       if (!isLeadComplete()) {
         ensureLeadFormVisible();
         updateLeadFormMode();
@@ -756,8 +993,10 @@
         event.stopPropagation();
         if (event.stopImmediatePropagation) event.stopImmediatePropagation();
       }
+
       state.pendingAction = "call";
       openPanel();
+
       if (!isLeadComplete()) {
         ensureLeadFormVisible();
         updateLeadFormMode();
@@ -765,8 +1004,9 @@
         if (firstField) firstField.focus();
         return;
       }
+
       postLeadCapture("call");
-      openDirectVoiceCall();
+      startRetellWebCall(event);
     }
 
     function bindRibbonToggleButton(element) {
@@ -802,19 +1042,30 @@
 
     function bindOpenButton(element, handler) {
       if (!element) return;
+
       let last = 0;
       const run = function (event) {
         const now = Date.now();
-        if (now - last < 250) return;
+        if (now - last < 800) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          }
+          return;
+        }
+
         last = now;
         handler(event);
       };
-      element.onclick = run;
-      element.ontouchend = run;
-      element.onpointerup = run;
-      element.addEventListener("click", run, true);
-      element.addEventListener("touchend", run, { passive: false, capture: true });
-      element.addEventListener("pointerup", run, true);
+
+      element.onclick = null;
+      element.ontouchend = null;
+      element.onpointerup = null;
+      element.addEventListener("click", run, false);
+      element.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") run(event);
+      }, false);
     }
 
     bindRibbonToggleButton(toggleButton);
@@ -851,8 +1102,8 @@
     document.addEventListener("click", function (event) {
       if (event.target && event.target.closest && event.target.closest(".kx-ribbon-toggle")) return;
 
-      const trigger = event.target && event.target.closest ? event.target.closest("a[href*='agent.retellai.com'], a[href*='retellai.com/kairox'], [data-kx-call], [data-kx-retell-call], .kx-call, .kx-chat-call") : null;
-      if (!trigger || trigger.closest(".kx-direct-call-panel")) return;
+      const trigger = event.target && event.target.closest ? event.target.closest("[data-kx-call], [data-kx-retell-call], .kx-call, .kx-chat-call") : null;
+      if (!trigger || trigger.closest(".kx-direct-call-panel") || trigger.closest(".kx-floating-actions")) return;
 
       event.preventDefault();
       event.stopPropagation();

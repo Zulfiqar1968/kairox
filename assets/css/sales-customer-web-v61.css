@@ -1,0 +1,205 @@
+/* =========================================================
+   KAIROX V61 — Customer-facing AI business value page
+   ========================================================= */
+
+.kx-customer-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 112px 0 76px;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(201,164,74,.14), transparent 32%),
+    radial-gradient(circle at 88% 6%, rgba(15,118,110,.13), transparent 28%),
+    linear-gradient(135deg, #FFFBF1 0%, #F7FBFA 56%, #FFFFFF 100%);
+}
+
+.kx-customer-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0 44%, rgba(201,164,74,.10) 44% 45%, transparent 45%),
+    radial-gradient(circle at 0 0, rgba(4,30,43,.055) 0 1px, transparent 1px 100%);
+  background-size: auto, 24px 24px;
+  pointer-events: none;
+}
+
+.kx-customer-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.kx-value-panel {
+  border: 1px solid rgba(15,118,110,.15);
+  background: rgba(255,255,255,.82);
+  border-radius: 28px;
+  padding: 26px;
+  box-shadow: 0 28px 70px rgba(4,30,43,.10);
+}
+
+.kx-value-panel h3 {
+  color: #07353D;
+  margin-bottom: 16px;
+}
+
+.kx-value-row {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(4,30,43,.08);
+}
+
+.kx-value-row:last-child {
+  border-bottom: 0;
+}
+
+.kx-value-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,118,110,.10);
+  color: #0F766E;
+  font-size: 20px;
+}
+
+.kx-value-row strong {
+  display: block;
+  color: #07353D;
+  margin-bottom: 3px;
+}
+
+.kx-value-row span {
+  color: rgba(4,30,43,.68);
+}
+
+.kx-benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kx-benefit-card {
+  border: 1px solid rgba(201,164,74,.20);
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 18px 44px rgba(4,30,43,.07);
+  height: 100%;
+}
+
+.kx-benefit-card .number {
+  display: inline-flex;
+  min-width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  background: #07353D;
+  color: #F4C95D;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.kx-comparison-card {
+  border: 1px solid rgba(15,118,110,.14);
+  border-radius: 26px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 22px 55px rgba(4,30,43,.08);
+}
+
+.kx-comparison-header {
+  padding: 22px 24px;
+  background: linear-gradient(135deg, #07353D, #041E2B);
+  color: #fff;
+}
+
+.kx-comparison-body {
+  padding: 24px;
+}
+
+.kx-comparison-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.kx-comparison-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 0;
+  color: rgba(4,30,43,.76);
+  border-bottom: 1px solid rgba(4,30,43,.07);
+}
+
+.kx-comparison-list li:last-child {
+  border-bottom: 0;
+}
+
+.kx-comparison-list i {
+  color: #0F766E;
+  margin-top: 2px;
+}
+
+.kx-usecase-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.kx-usecase-pill {
+  border: 1px solid rgba(15,118,110,.16);
+  background: rgba(255,255,255,.84);
+  color: #07353D;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 850;
+  font-size: 13px;
+}
+
+.kx-process-timeline {
+  display: grid;
+  gap: 14px;
+}
+
+.kx-process-timeline .step {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(15,118,110,.14);
+  border-radius: 20px;
+  background: rgba(255,255,255,.82);
+}
+
+.kx-process-timeline strong {
+  color: #07353D;
+}
+
+.kx-process-timeline span {
+  color: rgba(4,30,43,.70);
+}
+
+@media (max-width: 991px) {
+  .kx-benefit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .kx-customer-hero {
+    padding-top: 84px;
+  }
+
+  .kx-benefit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kx-process-timeline .step {
+    grid-template-columns: 1fr;
+  }
+}
